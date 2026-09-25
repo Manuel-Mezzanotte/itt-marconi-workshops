@@ -6,7 +6,7 @@ Per i test intermedi dalla directory del servizio:
 `../../.venv/bin/python -m pytest -c ../../pyproject.toml tests -q`.
 Non modificare contracts/, tests/integration/ o Exam/.
 
-- [ ] T-01 — Configurazione, errori, factory e avvio
+- [x] T-01 — Configurazione, errori, factory e avvio
   - Implementare config, ApiError, health e server locale senza reverse DNS.
   - Test di configurazione/ambiente, errori 404/405, contratto health e avvio con PORT.
   - _Requirements: REQ-EVT-04, REQ-EVT-05, REQ-EVT-06_
