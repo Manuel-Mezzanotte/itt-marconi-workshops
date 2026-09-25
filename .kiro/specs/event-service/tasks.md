@@ -18,7 +18,7 @@ Non modificare contracts/, tests/integration/ o Exam/.
     query combinate, pagine enormi, concorrenti senza aggiornamenti persi.
   - _Requirements: REQ-EVT-02, REQ-EVT-B06, REQ-EVT-03, REQ-EVT-05, REQ-EVT-06_
 
-- [ ] T-03 — Validazione, client HTTP e POST
+- [x] T-03 — Validazione, client HTTP e POST
   - Implementare EventCreate/EventUpdate, date, numeri, UUID e controllo transizioni.
   - Client user con timeout e mapping errori; service.create, route POST e factory.
   - Test responses, tipo/limiti/read-only, creazione sui backend, default,

@@ -1,4 +1,5 @@
 import pytest
+import responses
 
 from app import create_app
 from validator import assert_matches_contract
@@ -25,3 +26,20 @@ def contract():
         })
         return body
     return check
+
+
+@pytest.fixture
+def payload():
+    return {
+        "title": "Tech Conference", "organizer_id": "12345678-1234-4234-8234-123456789abc",
+        "venue": "Auditorium", "city": "Trento", "start_date": "2026-11-10",
+        "end_date": "2026-11-11", "capacity": 100, "price": 149.0,
+    }
+
+
+@pytest.fixture
+def users_http(payload):
+    with responses.RequestsMock() as mock:
+        mock.get(f"http://users.test:9001/api/v1/users/{payload['organizer_id']}",
+                 json={"role": "organizer"})
+        yield mock
