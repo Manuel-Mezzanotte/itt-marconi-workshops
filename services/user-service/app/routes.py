@@ -76,4 +76,9 @@ def create_routes_blueprint(service: UserService) -> Blueprint:
     def update_user(user_id):
         return jsonify(service.update_user(user_id, request.get_json(silent=False)))
 
+    @bp.route("/users/<user_id>", methods=["DELETE"])
+    def delete_user(user_id):
+        service.delete_user(user_id)
+        return "", 204
+
     return bp

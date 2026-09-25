@@ -60,7 +60,7 @@ il task successivo. Non modificare contratti, collaudo o la copia sotto Exam/.
   - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 2.3, 2.4, 3.2, 13.3, 13.4, 14.4, 14.5, 14.6, 14.7, 14.8, 14.9, 15.1, 15.2, 15.5_
   - _Traceability: REQ-USR-05, REQ-USR-B01, REQ-USR-B02, REQ-USR-10, REQ-USR-11, REQ-USR-12_
 
-- [ ] 7. Cancellazione e verifica dei contratti [T-07]
+- [x] 7. Cancellazione e verifica dei contratti [T-07]
   - Implementa UserService.delete_user e DELETE /api/v1/users/{id}: 204 senza body oppure 404. Non imporre requisiti sugli header non previsti dalla traccia.
   - Test sui tre backend: cancellazione, GET successivo 404, seconda cancellazione 404, riduzione del totale, riutilizzo dell'email liberata.
   - Completa i contract test per le sette operazioni dichiarate, con adattatore dict. Per 204 usa json=None. Verifica direttamente errori su path sconosciuti e metodi non previsti: il validator non può validare un'operazione assente dall'OpenAPI, quindi non chiamarlo su tali casi.

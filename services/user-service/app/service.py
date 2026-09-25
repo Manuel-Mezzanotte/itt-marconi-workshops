@@ -105,6 +105,10 @@ class UserService:
             raise UserNotFound(user_id)
         return updated
 
+    def delete_user(self, user_id: str) -> None:
+        if not self._repo.delete(user_id):
+            raise UserNotFound(user_id)
+
     def list_users(
         self,
         role: str | None = None,
