@@ -83,3 +83,19 @@ def validate_transition(previous, target):
     if previous != target and (previous, target) not in allowed:
         raise ApiError(422, "INVALID_STATUS_TRANSITION", "Event status transition is not allowed",
                        {"from": previous, "to": target})
+
+
+def validate_query(page=None, page_size=None, status=None, city=None):
+    numbers = []
+    for name, raw, default in (("page", page, 1), ("page_size", page_size, 20)):
+        try:
+            value = default if raw is None else int(raw)
+        except (ValueError, TypeError):
+            invalid("Pagination must use integers", field=name)
+        if value < 1 or (name == "page_size" and value > 100):
+            invalid("Pagination is outside its allowed range", field=name)
+        numbers.append(value)
+    if status is not None and status not in STATUSES:
+        invalid("Invalid status filter", field="status")
+    filters = {key: value for key, value in {"status": status, "city": city}.items() if value is not None}
+    return numbers[0], numbers[1], filters

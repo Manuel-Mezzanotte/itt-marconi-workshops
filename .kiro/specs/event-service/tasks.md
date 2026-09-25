@@ -26,7 +26,7 @@ Non modificare contracts/, tests/integration/ o Exam/.
   - _Requirements: REQ-EVT-01, REQ-EVT-B01, REQ-EVT-B02, REQ-EVT-B03,
     REQ-EVT-B04, REQ-EVT-B05, REQ-EVT-04, REQ-EVT-06_
 
-- [ ] T-04 — GET, lista e query
+- [x] T-04 — GET, lista e query
   - Aggiungere GET singolo/lista con filtri status/city e paginazione stabile.
   - Test sui tre backend: assente/presente, filtri singoli/AND, città vuota,
     totali, limiti e query invalide; contratti di successo/errore.

@@ -43,3 +43,12 @@ def users_http(payload):
         mock.get(f"http://users.test:9001/api/v1/users/{payload['organizer_id']}",
                  json={"role": "organizer"})
         yield mock
+
+
+@pytest.fixture
+def create_event(api, payload, users_http):
+    def create(**overrides):
+        response = api.post("/api/v1/events", json={**payload, **overrides})
+        assert response.status_code == 201, response.get_json()
+        return response.get_json()
+    return create
