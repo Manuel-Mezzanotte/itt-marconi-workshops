@@ -23,6 +23,11 @@ def service(request, tmp_path):
     return UserService(repo)
 
 
+@pytest.mark.req("REQ-USR-01")
+@pytest.mark.req("REQ-USR-B01")
+@pytest.mark.req("REQ-USR-B02")
+@pytest.mark.req("REQ-USR-10")
+@pytest.mark.req("REQ-USR-11")
 class TestUserServiceCreate:
     """REQ-USR-B02, REQ-USR-10: create_user behavior."""
 

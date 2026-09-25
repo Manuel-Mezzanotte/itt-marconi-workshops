@@ -68,6 +68,10 @@ def _user(
 # CRUD — basic operations
 # ---------------------------------------------------------------------------
 
+@pytest.mark.req("REQ-USR-01")
+@pytest.mark.req("REQ-USR-02")
+@pytest.mark.req("REQ-USR-B01")
+@pytest.mark.req("REQ-USR-09")
 class TestCreateAndGet:
     """REQ-USR-B01, REQ-USR-09"""
 
@@ -113,6 +117,8 @@ class TestCreateAndGet:
         assert repo.get_by_email("no@example.com") is None
 
 
+@pytest.mark.req("REQ-USR-06")
+@pytest.mark.req("REQ-USR-09")
 class TestDelete:
     """REQ-USR-09"""
 
@@ -132,6 +138,10 @@ class TestDelete:
         assert repo.delete(u["id"]) is False
 
 
+@pytest.mark.req("REQ-USR-04")
+@pytest.mark.req("REQ-USR-05")
+@pytest.mark.req("REQ-USR-B01")
+@pytest.mark.req("REQ-USR-09")
 class TestUpdate:
     """REQ-USR-B01, REQ-USR-09"""
 
@@ -186,6 +196,8 @@ class TestUpdate:
 # Email uniqueness
 # ---------------------------------------------------------------------------
 
+@pytest.mark.req("REQ-USR-B01")
+@pytest.mark.req("REQ-USR-B02")
 class TestEmailUniqueness:
     """REQ-USR-B01: uniqueness enforced atomically."""
 
@@ -250,6 +262,9 @@ class TestEmailUniqueness:
 # List, pagination and filters
 # ---------------------------------------------------------------------------
 
+@pytest.mark.req("REQ-USR-03")
+@pytest.mark.req("REQ-USR-B03")
+@pytest.mark.req("REQ-USR-B02")
 class TestList:
     """REQ-USR-03, REQ-USR-B03"""
 
@@ -369,6 +384,7 @@ class TestList:
 # Persistence: JSON and SQLite re-open
 # ---------------------------------------------------------------------------
 
+@pytest.mark.req("REQ-USR-09")
 class TestPersistence:
     """REQ-USR-09.7: data survives across repository instances."""
 
@@ -401,6 +417,7 @@ class TestPersistence:
 # Memory isolation
 # ---------------------------------------------------------------------------
 
+@pytest.mark.req("REQ-USR-09")
 class TestMemoryIsolation:
     """REQ-USR-09.8: separate memory instances are independent."""
 
@@ -421,6 +438,7 @@ class TestMemoryIsolation:
 # JSON atomic write: failure does not corrupt existing file
 # ---------------------------------------------------------------------------
 
+@pytest.mark.req("REQ-USR-09")
 class TestJsonAtomicWrite:
     """Verify that an error during write leaves the file intact."""
 
@@ -462,6 +480,7 @@ class TestJsonAtomicWrite:
 # Concurrent writes: same email race
 # ---------------------------------------------------------------------------
 
+@pytest.mark.req("REQ-USR-B01")
 class TestConcurrentEmail:
     """REQ-USR-B01: at most one thread can create a user with a given email."""
 
@@ -552,6 +571,8 @@ class TestConcurrentEmail:
 # list() returns copies
 # ---------------------------------------------------------------------------
 
+@pytest.mark.req("REQ-USR-03")
+@pytest.mark.req("REQ-USR-09")
 class TestListReturnsCopies:
     """Mutations to items returned by list() must not affect stored data."""
 
@@ -584,6 +605,7 @@ class TestListReturnsCopies:
 # Stable ordering with equal created_at, inserted in reverse id order
 # ---------------------------------------------------------------------------
 
+@pytest.mark.req("REQ-USR-03")
 class TestListOrderSameCreatedAt:
     """When created_at is identical the secondary sort key (id) must hold."""
 

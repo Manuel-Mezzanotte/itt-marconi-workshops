@@ -29,6 +29,10 @@ def client_with_backend(request, tmp_path):
     return app.test_client(), backend
 
 
+@pytest.mark.req("REQ-USR-01")
+@pytest.mark.req("REQ-USR-10")
+@pytest.mark.req("REQ-USR-11")
+@pytest.mark.req("REQ-USR-12")
 class TestPostUsersCreate:
     """POST /api/v1/users endpoint [T-03]."""
 
