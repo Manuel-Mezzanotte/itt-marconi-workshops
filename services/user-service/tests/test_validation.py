@@ -10,6 +10,10 @@ from app.errors import ValidationError
 from app.validation import validate_user_create
 
 
+@pytest.mark.req("REQ-USR-01")
+@pytest.mark.req("REQ-USR-B02")
+@pytest.mark.req("REQ-USR-10")
+@pytest.mark.req("REQ-USR-11")
 class TestUserCreateValidation:
     """REQ-USR-01, REQ-USR-B02: UserCreate payload validation."""
 
@@ -224,6 +228,10 @@ class TestUserCreateValidation:
         assert exc_info.value.details.get("field") == "role"
 
 
+@pytest.mark.req("REQ-USR-05")
+@pytest.mark.req("REQ-USR-B02")
+@pytest.mark.req("REQ-USR-10")
+@pytest.mark.req("REQ-USR-11")
 class TestUserUpdateValidation:
     """REQ-USR-B02: UserUpdate payload validation."""
 
