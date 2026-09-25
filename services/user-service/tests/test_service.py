@@ -41,15 +41,15 @@ class TestUserServiceCreate:
             pytest.fail("id is not a valid UUID")
 
     def test_create_generates_timestamp_utc_with_z(self, service):
-        """created_at and updated_at are ISO 8601 UTC with Z suffix."""
+        """created_at and updated_at are ISO 8601 UTC with Z suffix and 6-digit microseconds."""
         data = {
             "first_name": "Alice",
             "last_name": "Smith",
             "email": "alice@example.com",
         }
         user = service.create_user(data)
-        # Pattern: YYYY-MM-DDTHH:MM:SS.SSSZ
-        iso_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$")
+        # Pattern: YYYY-MM-DDTHH:MM:SS.FFFFFFZ (6 digit microseconds)
+        iso_pattern = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}Z$")
         assert iso_pattern.match(user["created_at"]), f"Bad format: {user['created_at']}"
         assert iso_pattern.match(user["updated_at"]), f"Bad format: {user['updated_at']}"
         # Verify they're actually UTC
@@ -122,7 +122,7 @@ class TestUserServiceCreate:
             "email": "alice@example.com",
         }
         service.create_user(data1)
-        
+
         data2 = {
             "first_name": "Bob",
             "last_name": "Jones",
@@ -139,7 +139,7 @@ class TestUserServiceCreate:
             "email": "alice@example.com",
         }
         service.create_user(data1)
-        
+
         data2 = {
             "first_name": "Bob",
             "last_name": "Jones",
@@ -156,14 +156,14 @@ class TestUserServiceCreate:
             "email": "alice@example.com",
         }
         user1 = service.create_user(data1)
-        
+
         data2 = {
             "first_name": "Bob",
             "last_name": "Jones",
             "email": "bob@example.com",
         }
         user2 = service.create_user(data2)
-        
+
         assert user1["id"] != user2["id"]
         assert user1["email"] != user2["email"]
 
@@ -177,3 +177,22 @@ class TestUserServiceCreate:
         original = dict(data)
         service.create_user(data)
         assert data == original
+
+    def test_create_timestamp_microseconds_six_digits(self, service):
+        """REQ-USR-10: ISO 8601 UTC with exactly six microsecond digits."""
+        from unittest.mock import patch
+        from app.service import _format_timestamp
+
+        # Test with 123456 microseconds
+        dt = datetime(2026, 1, 1, 12, 0, 0, 123456, tzinfo=timezone.utc)
+        result = _format_timestamp(dt)
+        assert result == "2026-01-01T12:00:00.123456Z", f"Expected .123456Z, got {result}"
+
+    def test_create_timestamp_microseconds_one(self, service):
+        """REQ-USR-10: Single microsecond preserved with leading zeros."""
+        from app.service import _format_timestamp
+
+        # Test with 1 microsecond (should be .000001Z)
+        dt = datetime(2026, 1, 1, 12, 0, 0, 1, tzinfo=timezone.utc)
+        result = _format_timestamp(dt)
+        assert result == "2026-01-01T12:00:00.000001Z", f"Expected .000001Z, got {result}"
