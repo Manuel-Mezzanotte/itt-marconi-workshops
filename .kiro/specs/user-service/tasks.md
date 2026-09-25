@@ -6,6 +6,10 @@ Otto task da eseguire in ordine, uno alla volta con Start task. Ogni task includ
 implementazione e test del proprio comportamento. Dopo la verifica si crea il
 commit corrispondente; Git è gestito separatamente, non dall'agente che esegue il task.
 
+Aggiornamento: T-01..T-03 eseguiti in Kiro; dal T-04 esecuzione sequenziale con
+Codex secondo `docs/execution-process.md`. La checklist documenta il lavoro
+verificato e non una simulazione di Start task nell'IDE.
+
 Il codice vive in services/user-service. Nei task intermedi usare dalla directory
 del servizio `../../.venv/bin/python -m pytest -c ../../pyproject.toml tests -q`.
 La soglia di coverage finale si verifica con make test-unit nel T-08. Non usare

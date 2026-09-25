@@ -4,6 +4,14 @@ inclusion: always
 
 # Struttura, responsabilità e processo
 
+## Aggiornamento dell'esecutore — 25 settembre 2026
+
+Dal T-04 di user-service si usa Codex, su indicazione del partecipante che riferisce
+l'autorizzazione del docente. Questa decisione prevale sulle istruzioni Kiro
+operative sotto riportate. Restano ordine delle spec, singoli task, test, commit
+e workflow dei bug; non si inventano esecuzioni nell'IDE. Vedere
+`docs/execution-process.md` per il confine tra le attività Kiro e Codex.
+
 ## Repository e confini
 
 Un solo repository: il fork `Manuel-Mezzanotte/itt-marconi-workshops`.
