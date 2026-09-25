@@ -209,3 +209,56 @@ class TestUserCreateValidation:
         original = dict(data)
         validate_user_create(data)
         assert data == original
+
+    @pytest.mark.parametrize("invalid_role", [[], {}])
+    def test_role_invalid_type_raises_422(self, invalid_role):
+        """Issue #3: role with wrong type (list/dict) raises ValidationError."""
+        data = {
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "email": "alice@example.com",
+            "role": invalid_role,
+        }
+        with pytest.raises(ValidationError) as exc_info:
+            validate_user_create(data)
+        assert exc_info.value.details.get("field") == "role"
+
+
+class TestUserUpdateValidation:
+    """REQ-USR-B02: UserUpdate payload validation."""
+
+    def test_valid_minimal_empty_dict(self):
+        """Empty dict is valid for update."""
+        from app.validation import validate_user_update
+
+        data = {}
+        result = validate_user_update(data)
+        assert result == {}
+
+    def test_valid_partial_update(self):
+        """Partial update with single field is valid."""
+        from app.validation import validate_user_update
+
+        data = {"first_name": "Bob"}
+        result = validate_user_update(data)
+        assert result["first_name"] == "Bob"
+
+    @pytest.mark.parametrize("readonly_field", ["id", "created_at", "updated_at"])
+    def test_readonly_field_rejected(self, readonly_field):
+        """Issue #1: Read-only field in body raises 422."""
+        from app.validation import validate_user_update
+
+        data = {readonly_field: "should-be-rejected"}
+        with pytest.raises(ValidationError) as exc_info:
+            validate_user_update(data)
+        assert readonly_field in exc_info.value.details.get("fields", [])
+
+    @pytest.mark.parametrize("invalid_role", [[], {}])
+    def test_role_invalid_type_raises_422(self, invalid_role):
+        """Issue #3: role with wrong type (list/dict) raises ValidationError."""
+        from app.validation import validate_user_update
+
+        data = {"role": invalid_role}
+        with pytest.raises(ValidationError) as exc_info:
+            validate_user_update(data)
+        assert exc_info.value.details.get("field") == "role"

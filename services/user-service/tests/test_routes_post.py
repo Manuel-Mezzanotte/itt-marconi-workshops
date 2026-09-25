@@ -449,3 +449,44 @@ class TestPostUsersCreate:
         }
         resp_valid = client.post("/api/v1/users", json=payload)
         assert resp_valid.status_code == 201
+
+    @pytest.mark.parametrize("invalid_role", [[], {}])
+    def test_post_role_invalid_type_422(self, client_with_backend, invalid_role):
+        """Issue #3: role with wrong type (list/dict) returns 422, not TypeError."""
+        client, _ = client_with_backend
+        email = "alice@example.com"
+        payload = {
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "email": email,
+            "role": invalid_role,
+        }
+        resp = client.post("/api/v1/users", json=payload)
+        assert resp.status_code == 422
+        data = resp.get_json()
+        assert data["error"]["code"] == "VALIDATION_ERROR"
+
+    @pytest.mark.parametrize("invalid_role", [[], {}])
+    def test_post_role_invalid_type_no_create_then_valid(self, client_with_backend, invalid_role):
+        """Issue #3: Invalid role type doesn't create user; valid POST with same email succeeds."""
+        client, _ = client_with_backend
+        email = "alice@example.com"
+
+        # First attempt with invalid role type
+        payload_invalid = {
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "email": email,
+            "role": invalid_role,
+        }
+        resp_invalid = client.post("/api/v1/users", json=payload_invalid)
+        assert resp_invalid.status_code == 422
+
+        # Send valid payload with same email - should succeed (user was not created)
+        payload_valid = {
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "email": email,
+        }
+        resp_valid = client.post("/api/v1/users", json=payload_valid)
+        assert resp_valid.status_code == 201
