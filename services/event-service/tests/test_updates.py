@@ -49,6 +49,7 @@ def test_patch_preserves_other_fields_and_empty_is_noop(api, create_event, users
 @pytest.mark.parametrize("changes", [
     {"start_date": "2026-11-12"}, {"end_date": "2026-11-09"},
 ])
+@pytest.mark.req("REQ-EVT-B03")
 def test_patch_dates_validated_after_merge(api, create_event, contract, changes):
     before = create_event()
     path = f"{BASE}/{before['id']}"
@@ -62,6 +63,7 @@ def test_patch_dates_validated_after_merge(api, create_event, contract, changes)
 
 @pytest.mark.parametrize("method", ["PUT", "PATCH"])
 @pytest.mark.parametrize("previous,target", list(product(["draft", "published", "cancelled"], repeat=2)))
+@pytest.mark.req("REQ-EVT-B04")
 def test_state_transitions_on_both_methods(api, payload, create_event, contract, method, previous, target):
     before = create_event(status=previous)
     path = f"{BASE}/{before['id']}"
@@ -83,6 +85,9 @@ def test_state_transitions_on_both_methods(api, payload, create_event, contract,
     (200, {"role": "attendee"}, 422, "INVALID_ORGANIZER"),
     (503, {}, 503, "DEPENDENCY_UNAVAILABLE"),
 ])
+@pytest.mark.req("REQ-EVT-B01")
+@pytest.mark.req("REQ-EVT-B02")
+@pytest.mark.req("REQ-EVT-B05")
 def test_organizer_failures_do_not_modify(api, payload, create_event, users_http, contract,
                                        method, status, body, expected, code):
     before = create_event()
@@ -141,6 +146,7 @@ def test_unknown_id_and_disappearance_at_write(api, payload, create_event, contr
     contract(api.open(path, method=method, json=payload), method, path, 404)
 
 
+@pytest.mark.req("REQ-EVT-B04")
 def test_concurrent_publication_cannot_revive_cancelled_event(api, create_event, contract, monkeypatch):
     before = create_event()
     path = f"{BASE}/{before['id']}"

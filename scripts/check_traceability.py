@@ -22,6 +22,7 @@ class TraceabilityAudit:
             ))
         self.items = []
         self.invalid = []
+        self.uncovered = set()
 
     def pytest_collection_finish(self, session):
         for item in session.items:
@@ -32,6 +33,9 @@ class TraceabilityAudit:
             if not references or unknown:
                 self.invalid.append({"test": item.nodeid, "unknown": sorted(unknown)})
             self.items.append({"test": item.nodeid, "requirements": sorted(references)})
+        if self.group != "integration":
+            covered = {reference for item in self.items for reference in item["requirements"]}
+            self.uncovered = self.declared - covered
         destination = ROOT / ".checks" / f"traceability-{self.group}.json"
         destination.parent.mkdir(exist_ok=True)
         destination.write_text(json.dumps(self.items, indent=2) + "\n")
@@ -48,9 +52,13 @@ def run_group(group):
     target = "tests/service_integration" if group == "integration" else "tests"
     result = pytest.main(["-c", str(ROOT / "pyproject.toml"), target, "--collect-only", "-q"], plugins=[audit])
     print(f"TRACEABILITY {group}: {len(audit.items)} cases, {len(audit.invalid)} invalid")
+    if group != "integration":
+        print(f"REQUIREMENTS {group}: {len(audit.declared)} declared, {len(audit.uncovered)} without tests")
+    if audit.uncovered:
+        print(f"UNCOVERED {group}: {', '.join(sorted(audit.uncovered))}")
     for problem in audit.invalid[:20]:
         print(json.dumps(problem))
-    return int(result) or (1 if audit.invalid else 0)
+    return int(result) or (1 if audit.invalid or audit.uncovered else 0)
 
 
 def main():
@@ -68,7 +76,7 @@ def main():
         log.parent.mkdir(exist_ok=True)
         log.write_text(result.stdout)
         for line in result.stdout.splitlines():
-            if line.startswith("TRACEABILITY") or (result.returncode and line.startswith('{"test"')):
+            if line.startswith(("TRACEABILITY", "REQUIREMENTS", "UNCOVERED")) or (result.returncode and line.startswith('{"test"')):
                 print(line)
         if result.returncode:
             if "TRACEABILITY" not in result.stdout:

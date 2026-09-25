@@ -24,6 +24,7 @@ def test_empty_list(api, contract):
     }
 
 
+@pytest.mark.req("REQ-EVT-B06")
 def test_pagination_and_filters(api, create_event, contract):
     events = [create_event(title=f"Conference {number}", status="published" if number % 2 else "draft",
                            city="Roma" if number % 3 else "Trento") for number in range(23)]
@@ -42,6 +43,7 @@ def test_pagination_and_filters(api, create_event, contract):
     assert api.get(BASE, query_string={"city": "roma"}).get_json()["items"] == []
 
 
+@pytest.mark.req("REQ-EVT-B06")
 def test_empty_city_is_distinct_from_no_filter(api, create_event, contract):
     empty = create_event(city="")
     create_event(city="Trento")

@@ -2,13 +2,13 @@ PYTHON := $(CURDIR)/.venv/bin/python
 SERVICE ?=
 MANDATORY_SERVICES := user-service event-service registration-service
 
-.PHONY: setup check check-env check-template check-collection test test-unit test-unit-all test-own-integration acceptance
+.PHONY: setup check check-env check-template check-collection check-traceability test test-unit test-unit-all test-own-integration acceptance
 
 setup:
 	python3.12 -m venv .venv
 	"$(PYTHON)" -m pip install -r requirements.lock
 
-check: check-env check-template check-collection
+check: check-env check-template check-collection check-traceability
 
 check-env:
 	"$(PYTHON)" -c 'import sys; assert sys.version_info[:2] == (3, 12), sys.version; import flask, requests, pytest, pytest_cov, responses, yaml, jsonschema; print("Python 3.12 e dipendenze disponibili")'
@@ -21,6 +21,9 @@ check-template:
 
 check-collection:
 	"$(PYTHON)" -m pytest tests/integration --collect-only -q
+
+check-traceability:
+	"$(PYTHON)" scripts/check_traceability.py
 
 test-unit:
 	@case "$(SERVICE)" in user-service|event-service|registration-service|feedback-service|notification-service) ;; *) echo 'Specificare SERVICE, ad esempio: make test-unit SERVICE=user-service'; exit 2 ;; esac

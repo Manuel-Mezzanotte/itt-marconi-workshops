@@ -13,6 +13,7 @@ BASE = "/api/v1/registrations"
 
 
 @pytest.mark.parametrize("price", [0, 149.0, 25.55])
+@pytest.mark.req("REQ-REG-B06")
 def test_creation_amount_and_contract(api, payload, event, references, contract, price):
     event["price"] = price
     with patch("app.clients.requests.get", wraps=requests.get) as get:
@@ -40,6 +41,9 @@ def test_creation_amount_and_contract(api, payload, event, references, contract,
     (200, {}, 503, "DEPENDENCY_UNAVAILABLE"), (200, [], 503, "DEPENDENCY_UNAVAILABLE"),
     (200, {"id": "different"}, 503, "DEPENDENCY_UNAVAILABLE"),
 ])
+@pytest.mark.req("REQ-REG-B01")
+@pytest.mark.req("REQ-REG-B02")
+@pytest.mark.req("REQ-REG-B09")
 def test_dependency_errors(api, payload, event, contract, dependency, status, body, expected, code):
     with responses.RequestsMock() as mock:
         if dependency == "events":
@@ -55,6 +59,7 @@ def test_dependency_errors(api, payload, event, contract, dependency, status, bo
 
 @pytest.mark.parametrize("dependency", ["users", "events"])
 @pytest.mark.parametrize("failure", [requests.Timeout("timeout"), requests.ConnectionError("refused"), "not JSON"])
+@pytest.mark.req("REQ-REG-B09")
 def test_transport_and_body_failures(api, payload, contract, dependency, failure):
     with responses.RequestsMock() as mock:
         if dependency == "events":
@@ -71,18 +76,22 @@ def test_transport_and_body_failures(api, payload, contract, dependency, failure
     ("price", "149"), ("price", -1), ("price", True), ("price", float("nan")),
     ("price", float("inf")), ("price", 10**400), ("status", []), ("status", "other"),
 ])
+@pytest.mark.req("REQ-REG-B09")
 def test_invalid_event_data_is_dependency_error(api, payload, event, references, contract, field, value):
     event[field] = value
     assert contract(api.post(BASE, json=payload), "POST", BASE, 503)["error"]["code"] == "DEPENDENCY_UNAVAILABLE"
 
 
 @pytest.mark.parametrize("status", ["draft", "cancelled"])
+@pytest.mark.req("REQ-REG-B03")
 def test_event_not_open(api, payload, event, references, contract, status):
     event["status"] = status
     assert contract(api.post(BASE, json=payload), "POST", BASE, 422)["error"]["code"] == "EVENT_NOT_OPEN"
     assert api.application.extensions["registration_repository"].count_confirmed(payload["event_id"]) == 0
 
 
+@pytest.mark.req("REQ-REG-B04")
+@pytest.mark.req("REQ-REG-B05")
 def test_duplicate_priority_capacity_and_separate_events(api, payload, event, references, contract):
     event["capacity"] = 1
     first = contract(api.post(BASE, json=payload), "POST", BASE, 201)

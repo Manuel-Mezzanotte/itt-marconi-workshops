@@ -8,6 +8,7 @@ pytestmark = pytest.mark.req("REQ-REG-03")
 BASE = "/api/v1/registrations"
 
 
+@pytest.mark.req("REQ-REG-B07")
 def test_cancellation_is_idempotent_and_cannot_reactivate(api, create_registration, references, contract, monkeypatch):
     original = create_registration()
     path = f"{BASE}/{original['id']}"
@@ -24,6 +25,9 @@ def test_cancellation_is_idempotent_and_cannot_reactivate(api, create_registrati
     assert len(references.calls) == 0
 
 
+@pytest.mark.req("REQ-REG-B04")
+@pytest.mark.req("REQ-REG-B05")
+@pytest.mark.req("REQ-REG-B07")
 def test_cancel_then_same_user_reregisters_and_historical_delete_does_not_free_seat(
     api, payload, event, create_registration, contract,
 ):
@@ -40,6 +44,7 @@ def test_cancel_then_same_user_reregisters_and_historical_delete_does_not_free_s
     assert contract(response, "POST", BASE, 409)["error"]["code"] == "EVENT_FULL"
 
 
+@pytest.mark.req("REQ-REG-B05")
 def test_delete_confirmed_frees_seat_and_is_local(api, payload, event, create_registration, references, contract):
     event["capacity"] = 1
     original = create_registration()
@@ -54,6 +59,7 @@ def test_delete_confirmed_frees_seat_and_is_local(api, payload, event, create_re
     assert api.get(BASE).get_json()["items"] == [replacement]
 
 
+@pytest.mark.req("REQ-REG-B06")
 def test_amount_remains_historical(api, event, create_registration, contract):
     old = create_registration()
     event["price"] = 249.99
@@ -106,6 +112,7 @@ def test_unknown_ids_and_put_405(api, create_registration, contract):
     assert api.get(path).get_json() == original
 
 
+@pytest.mark.req("REQ-REG-05")
 def test_all_eight_contract_operations_in_capacity_journey(api, payload, references, contract):
     contract(api.get("/health"), "GET", "/health")
     first = contract(api.post(BASE, json=payload), "POST", BASE, 201)

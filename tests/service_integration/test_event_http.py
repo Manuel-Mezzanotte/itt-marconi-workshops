@@ -45,6 +45,8 @@ def test_event_crud_with_real_organizer(event_platform, http):
     assert http(event, "GET", path).status_code == 404
 
 
+@pytest.mark.req("REQ-EVT-B01")
+@pytest.mark.req("REQ-EVT-B02")
 def test_missing_reference_and_wrong_role(event_platform, http):
     user, event = event_platform
     missing = http(event, "POST", BASE, json=payload(str(uuid4())))
@@ -55,6 +57,7 @@ def test_missing_reference_and_wrong_role(event_platform, http):
     assert http(event, "GET", BASE).json()["total"] == 0
 
 
+@pytest.mark.req("REQ-EVT-B05")
 def test_dependency_stopped_preserves_data(event_platform, http):
     user, event = event_platform
     data = payload(organizer(http, user)["id"])
