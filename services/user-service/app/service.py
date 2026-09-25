@@ -67,5 +67,5 @@ class UserService:
 
 
 def _format_timestamp(dt: datetime) -> str:
-    """Format a datetime as ISO 8601 UTC with Z suffix."""
-    return dt.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
+    """Format a datetime as ISO 8601 UTC with Z suffix and six-digit microseconds."""
+    return dt.strftime("%Y-%m-%dT%H:%M:%S.%f") + "Z"
