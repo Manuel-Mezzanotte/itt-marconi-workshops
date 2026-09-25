@@ -12,6 +12,8 @@ e verificato con gli unit test; le issue restano aperte fino al collaudo del ser
 | BUG-04 | [#4](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops/issues/4) | Prova del blueprint POST del T-03 con Flask test_client | impl | REQ-USR-01, REQ-USR-11, design Errori e parsing | Location dipende da una route GET non ancora implementata; UnsupportedMediaType non viene convertito nell'errore JSON previsto | Regressioni rosse su tre backend per Location e Content-Type; fix Kiro Default/Vibe, poi 297 test verdi | f0cf6c8, branch fix/user-4; collaudo finale pendente |
 | BUG-05 | [#5](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops/issues/5) | Revisione del formato timestamp del T-03 | impl | REQ-USR-10, design UserService | Lo slicing [:-3] elimina tre cifre dei microsecondi; il test del formato replica la precisione errata | Nove casi rossi prima del fix Kiro Default/Vibe, poi formato a sei cifre e 324 test verdi | fd7dc26, branch fix/user-5; collaudo finale pendente |
 
+| BUG-06 | [#6](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops/issues/6) | Collaudo T-08: 8 errori di setup del backend JSON | impl | REQ-USR-09, REQ-USR-07 | HTTPServer.server_bind esegue getfqdn sull'indirizzo locale e attende il resolver prima di accettare richieste | test_main_starts_when_reverse_dns_is_unavailable: rosso prima del fix; poi 597 unit/contract verdi e IT-U01..IT-U08 verdi su memory, JSON e SQLite | branch fix/user-6; socket TCP passato a Werkzeug tramite fd |
+
 Registrare soltanto difetti reali. Per il processo di gestione e la distinzione
 tra bug di implementazione e di specifica, vedere `.kiro/steering/structure.md`
 e `Exam/Exam.MD`, §6.5.

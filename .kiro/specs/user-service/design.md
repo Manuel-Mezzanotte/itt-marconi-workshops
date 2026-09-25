@@ -46,6 +46,13 @@ L'entrypoint ascolta su `127.0.0.1` e sulla porta configurata. Nei test si passa
 un override alla factory senza ricaricare moduli. Health restituisce esattamente
 `{"status":"ok","service":"user-service"}` e non interroga lo storage.
 
+Per evitare che la risoluzione DNS inversa blocchi l'avvio locale (issue #6),
+l'entrypoint apre il socket TCP con `socket.create_server` e passa il descrittore
+a `werkzeug.serving.make_server`. L'applicazione rimane Flask; il server usa
+thread per le richieste, senza debugger o reloader. Entrambi i socket sono chiusi
+tramite context manager. Questa modalità di avvio è destinata a macOS/Linux,
+come il manifest, e non è un server di produzione.
+
 ### Errori e parsing
 
 Le eccezioni di dominio non costruiscono response Flask. Gli handler producono
