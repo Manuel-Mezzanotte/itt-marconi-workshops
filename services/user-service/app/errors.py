@@ -82,6 +82,10 @@ def register_error_handlers(app: Flask) -> None:
     def handle_method_not_allowed(exc):
         return _error_response("METHOD_NOT_ALLOWED", str(exc), 405)
 
+    @app.errorhandler(500)
+    def handle_internal_error(exc):
+        return _error_response("INTERNAL_ERROR", "Internal server error", 500)
+
     @app.errorhandler(ValidationError)
     def handle_validation_error(exc: ValidationError):
         return _error_response("VALIDATION_ERROR", exc.message, 422, exc.details)

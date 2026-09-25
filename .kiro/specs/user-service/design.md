@@ -217,8 +217,12 @@ For any valid CRUD sequence, the three backends have equivalent results, excludi
 | Email di un altro utente | 409 | EMAIL_ALREADY_EXISTS |
 | Utente o percorso inesistente | 404 | NOT_FOUND |
 | Metodo non previsto | 405 | METHOD_NOT_ALLOWED |
+| Errore interno inatteso | 500 | INTERNAL_ERROR |
 
 Gli errori 404/405 sono registrati a livello app, non solo nel blueprint.
+Anche il 500 mantiene l'involucro JSON uniforme, con messaggio generico e details
+vuoto: il dettaglio dell'eccezione rimane nei log del server (issue #8).
+Poiché 500 non è dichiarato dall'OpenAPI, la regressione lo verifica direttamente.
 La regola generale 400 per JSON malformato si applica anche a PUT/PATCH secondo
 il §4: il loro contratto elenca 404/409/422 e non dichiara 400. I test dei casi
 400 PUT/PATCH verificano direttamente status e corpo, senza modificare il contratto.

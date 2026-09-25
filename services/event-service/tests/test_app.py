@@ -45,6 +45,7 @@ def test_invalid_configuration(overrides):
         load_config(overrides)
 
 
+@pytest.mark.req("REQ-EVT-04")
 def test_health_without_dependency(api, contract):
     assert contract(api.get("/health"), "GET", "/health") == {
         "status": "ok", "service": "event-service",
@@ -55,12 +56,14 @@ def test_health_without_dependency(api, contract):
     ("GET", "/missing", 404, "NOT_FOUND"),
     ("POST", "/health", 405, "METHOD_NOT_ALLOWED"),
 ])
+@pytest.mark.req("REQ-EVT-04")
 def test_uniform_http_errors(api, method, path, status, code):
     response = api.open(path, method=method)
     assert response.status_code == status
     assert response.get_json()["error"]["code"] == code
 
 
+@pytest.mark.req("REQ-EVT-04")
 def test_domain_and_other_http_errors():
     application = create_app({"STORAGE_BACKEND": "memory"})
 

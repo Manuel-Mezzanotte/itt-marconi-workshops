@@ -44,6 +44,9 @@ def test_post_contract_defaults_and_explicit_status(api, payload, users_http, co
     (200, [], 503, "DEPENDENCY_UNAVAILABLE"),
     (200, {"role": []}, 503, "DEPENDENCY_UNAVAILABLE"),
 ])
+@pytest.mark.req("REQ-EVT-B01")
+@pytest.mark.req("REQ-EVT-B02")
+@pytest.mark.req("REQ-EVT-B05")
 def test_upstream_errors_do_not_create(api, payload, contract, response_status, body, status, code):
     with responses.RequestsMock() as mock:
         mock.get(f"http://users.test:9001/api/v1/users/{payload['organizer_id']}",
@@ -54,6 +57,7 @@ def test_upstream_errors_do_not_create(api, payload, contract, response_status, 
 
 
 @pytest.mark.parametrize("failure", [requests.Timeout("timeout"), requests.ConnectionError("refused"), "not JSON"])
+@pytest.mark.req("REQ-EVT-B05")
 def test_dependency_transport_and_invalid_json(api, payload, contract, failure):
     with responses.RequestsMock() as mock:
         mock.get(f"http://users.test:9001/api/v1/users/{payload['organizer_id']}", body=failure)
@@ -67,6 +71,7 @@ def test_dependency_transport_and_invalid_json(api, payload, contract, failure):
     ("extra", 1), ("capacity", True), ("price", float("nan")),
     ("organizer_id", "bad"), ("end_date", "2020-01-01"),
 ])
+@pytest.mark.req("REQ-EVT-B03")
 def test_local_validation_precedes_http(api, payload, contract, field, value):
     with responses.RequestsMock() as mock:
         result = contract(api.post(BASE, json={**payload, field: value}), "POST", BASE, 422)

@@ -40,6 +40,7 @@ def test_valid_boundary_values_and_input_unchanged(payload):
     ("status", "other"), ("status", []), ("status", {}),
     ("id", "client"), ("created_at", "2026-01-01T00:00:00Z"), ("updated_at", "ignored"),
 ])
+@pytest.mark.req("REQ-EVT-B03")
 def test_invalid_fields(payload, field, value):
     with pytest.raises(ApiError) as error:
         validate_event({**payload, field: value})
@@ -68,6 +69,7 @@ def test_partial_validates_only_present_fields():
 
 
 @pytest.mark.parametrize("previous,target", list(product(sorted(STATUSES), repeat=2)))
+@pytest.mark.req("REQ-EVT-B04")
 def test_all_state_pairs(previous, target):
     allowed = previous == target or (previous, target) in {
         ("draft", "published"), ("draft", "cancelled"), ("published", "cancelled"),

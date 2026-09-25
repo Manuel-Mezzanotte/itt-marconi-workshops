@@ -43,6 +43,9 @@ def test_missing_and_copies(storage):
     assert repo.count_confirmed(EVENT) == 1
 
 
+@pytest.mark.req("REQ-REG-B04")
+@pytest.mark.req("REQ-REG-B05")
+@pytest.mark.req("REQ-REG-B07")
 def test_duplicate_before_full_and_cancel_allows_reregistration(storage):
     repo, _, _ = storage
     original = repo.reserve(record(), 1)
@@ -90,6 +93,8 @@ def test_filter_pagination_and_persistence(storage):
 
 
 @pytest.mark.parametrize("same_user", [False, True])
+@pytest.mark.req("REQ-REG-B04")
+@pytest.mark.req("REQ-REG-B05")
 def test_concurrent_reservations_have_one_winner(storage, same_user):
     repo, _, _ = storage
 
@@ -108,6 +113,8 @@ def test_concurrent_reservations_have_one_winner(storage, same_user):
 
 
 @pytest.mark.parametrize("same_user", [False, True])
+@pytest.mark.req("REQ-REG-B04")
+@pytest.mark.req("REQ-REG-B05")
 def test_sqlite_distinct_instances_share_capacity_and_unique_constraint(tmp_path, same_user):
     repositories = [get_repository("sqlite", tmp_path) for _ in range(2)]
 

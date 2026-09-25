@@ -65,6 +65,7 @@ def test_invalid_query(api, query, contract):
     assert contract(api.get(BASE, query_string=query), "GET", BASE, 422)["error"]["code"] == "VALIDATION_ERROR"
 
 
+@pytest.mark.req("REQ-REG-B08")
 def test_stats_counts_and_capacity_reduction(api, payload, event, create_registration, contract):
     create_registration()
     create_registration(user_id=str(uuid4()))
@@ -78,6 +79,7 @@ def test_stats_counts_and_capacity_reduction(api, payload, event, create_registr
 
 
 @pytest.mark.parametrize("status", ["draft", "published", "cancelled"])
+@pytest.mark.req("REQ-REG-B08")
 def test_stats_on_empty_event_uses_only_event_service(api, payload, event, references, contract, status):
     event["status"] = status
     path = f"{BASE}/stats"
@@ -88,6 +90,7 @@ def test_stats_on_empty_event_uses_only_event_service(api, payload, event, refer
 
 
 @pytest.mark.parametrize("query", [{}, {"event_id": ""}, {"event_id": "bad"}])
+@pytest.mark.req("REQ-REG-B08")
 def test_stats_requires_valid_event_id(api, query, contract):
     path = f"{BASE}/stats"
     assert contract(api.get(path, query_string=query), "GET", path, 422)["error"]["code"] == "VALIDATION_ERROR"
@@ -98,6 +101,8 @@ def test_stats_requires_valid_event_id(api, query, contract):
     (503, {}, 503, "DEPENDENCY_UNAVAILABLE"),
     (200, requests.Timeout("timeout"), 503, "DEPENDENCY_UNAVAILABLE"),
 ])
+@pytest.mark.req("REQ-REG-B08")
+@pytest.mark.req("REQ-REG-B09")
 def test_stats_missing_or_unavailable_event(api, payload, contract, status, body, expected, code):
     path = f"{BASE}/stats"
     with responses.RequestsMock() as mock:

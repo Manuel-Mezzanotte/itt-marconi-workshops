@@ -36,6 +36,11 @@ def register(http, service, user_id, event_id):
     return http(service, "POST", BASE, json={"user_id": user_id, "event_id": event_id})
 
 
+@pytest.mark.req("REQ-REG-B04")
+@pytest.mark.req("REQ-REG-B05")
+@pytest.mark.req("REQ-REG-B06")
+@pytest.mark.req("REQ-REG-B07")
+@pytest.mark.req("REQ-REG-B08")
 def test_full_capacity_journey_and_historical_price(registration_platform, http):
     user, event, registration = registration_platform
     conference = event_record(http, user, event)
@@ -67,6 +72,9 @@ def test_full_capacity_journey_and_historical_price(registration_platform, http)
     assert http(registration, "GET", BASE, params={"status": "confirmed"}).json()["items"] == [third.json()]
 
 
+@pytest.mark.req("REQ-REG-B01")
+@pytest.mark.req("REQ-REG-B02")
+@pytest.mark.req("REQ-REG-B03")
 def test_reference_errors_and_closed_event(registration_platform, http):
     user, event, registration = registration_platform
     attendee = user_record(http, user)
@@ -85,6 +93,7 @@ def test_reference_errors_and_closed_event(registration_platform, http):
 
 
 @pytest.mark.parametrize("dependency", ["user", "event"])
+@pytest.mark.req("REQ-REG-B09")
 def test_each_dependency_stopped_separately(registration_platform, http, dependency):
     user, event, registration = registration_platform
     attendees = [user_record(http, user) for _ in range(2)]
@@ -105,6 +114,8 @@ def test_each_dependency_stopped_separately(registration_platform, http, depende
 
 
 @pytest.mark.parametrize("same_user", [False, True])
+@pytest.mark.req("REQ-REG-B04")
+@pytest.mark.req("REQ-REG-B05")
 def test_concurrent_http_reservations_have_one_winner(registration_platform, http, same_user):
     user, event, registration = registration_platform
     conference = event_record(http, user, event, capacity=1)
