@@ -1,78 +1,124 @@
-# itt-marconi-workshops
+# TechConf
 
-Hands-on labs for the ITT Marconi training programme.
+Progetto per l'esame pratico Spec-Driven Development con Kiro.
+Fork: [Manuel-Mezzanotte/itt-marconi-workshops](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops).
+Traccia: [Exam/Exam.MD](Exam/Exam.MD).
 
----
+## Stato: fase 1, preparazione
 
-## Lab 0 — Python Refresher: Build Your First Real App
+Ambiente Python 3.12, dipendenze, struttura, steering, hook, manifest e comandi di
+verifica sono predisposti. **Nessun microservizio è implementato** e non sono
+ancora state create le spec dei servizi. Non sono disponibili server, test unitari
+applicativi, coverage o un collaudo funzionale superato.
 
-**Level:** Beginner / refresher · **Duration:** 2h (core) / 2h 30min (full) · **Language:** English
+`services.yaml` contiene `services: {}`: i servizi verranno dichiarati
+progressivamente dopo l'implementazione del relativo entrypoint e di `/health`.
+Un'esecuzione con test skipped non è un collaudo superato.
 
-Build a **Personal Expense Tracker** CLI app incrementally, one Python concept at a time. Covers the full core of the language: data types, collections, control flow, functions, modules, file I/O, and error handling.
+## Ambiente riproducibile
 
-| Task | Topic |
-|------|-------|
-| 0–2  | Running scripts, data types, `input`, f-strings |
-| 3–4  | Lists, `while`/`for`/`if` |
-| 5–6  | Dictionaries, functions |
-| 7–8  | `json`, `datetime`, `pathlib`, file I/O |
-| 9    | `try`/`except` (bonus) |
+Prerequisiti: Python **3.12**, Git, Kiro IDE; `make` e `shasum` per i comandi rapidi.
 
-See [`Lab0_README.md`](./Lab0_README.md)
+```bash
+git clone https://github.com/Manuel-Mezzanotte/itt-marconi-workshops.git
+cd itt-marconi-workshops
+make setup
+make check
+```
 
----
+`make setup` crea `.venv/` e installa le versioni di `requirements.lock`.
+In alternativa:
 
-## Lab 1 — Setup Colab e librerie scientifiche di base
+```bash
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements.lock
+```
 
-**Livello:** Beginner · **Durata:** ~75 min · **Ambiente:** Google Colab · **Linguaggio:** Python 3
+Le dipendenze runtime sono in `requirements.txt`; quelle di sviluppo in
+`requirements-dev.txt`, che include i requisiti intatti del collaudo.
+Il virtualenv è locale e non va committato. Non serve modificare il Python
+predefinito del Mac. I comandi e il manifest sono predisposti per macOS/Linux.
 
-Introduzione allo stack scientifico Python su Google Colab. Nessuna installazione richiesta.
+## Workspace Kiro
 
-| Esercizio | Argomento |
-|-----------|-----------|
-| 0 | Google Colab: Hello World e verifica librerie |
-| 1 | NumPy: array, operazioni vettorializzate, slicing |
-| 2 | SciPy: statistiche descrittive, distribuzioni, t-test |
-| 3 | matplotlib: line plot, scatter, istogramma, subplot |
-| 4 | pandas: DataFrame, filtri, group-by, CSV reale (Titanic) |
+Aprire questa root Git in Kiro, non `Exam/techconf-exam/`.
+Gli steering in `.kiro/steering/` definiscono prodotto, stack, struttura e standard.
+Il file degli standard riproduce il §4 della traccia.
 
-See [`Lab1_README.md`](./Lab1_README.md)
+L'hook `.kiro/hooks/check-workspace.json` esegue `make check` prima di un prompt
+e salva l'esito in `.checks/pre-prompt.log`, escluso da Git. Verifica l'ambiente,
+l'integrità del template e la raccolta del collaudo; non avvia microservizi.
+Se l'hook risulta disattivato dopo aver autorizzato la cartella, ricaricare la
+finestra di Kiro per inizializzare il workspace come trusted.
 
----
+Per ogni servizio: requirements con EARS e commit, design e commit, tasks e
+commit, quindi **Start task** uno alla volta con verifica e commit per task.
+Non scrivere codice applicativo prima del commit di tasks.
 
-## Lab 2 — Prima applicazione ML: il dataset Iris con scikit-learn
+## Servizi previsti e variabili
 
-**Livello:** Beginner · **Durata:** ~90 min · **Ambiente:** Google Colab · **Linguaggio:** Python 3
+| Servizio | Porta di sviluppo | Dipendenze HTTP | Stato |
+|---|---:|---|---|
+| user-service | 5001 | nessuna | non implementato |
+| event-service | 5002 | user-service | non implementato |
+| registration-service | 5003 | user-service, event-service | non implementato |
+| feedback-service | 5004 | registration-service, event-service | bonus non avviato |
+| notification-service | 5005 | user-service, registration-service | bonus non avviato |
 
-Primo workflow ML end-to-end con scikit-learn: dall'esplorazione dei dati alla valutazione del modello.
+| Variabile | Significato e default previsto dalla traccia |
+|---|---|
+| `PORT` | porta del servizio; default di sviluppo della tabella |
+| `USER_SERVICE_URL` | default `http://localhost:5001` |
+| `EVENT_SERVICE_URL` | default `http://localhost:5002` |
+| `REGISTRATION_SERVICE_URL` | default `http://localhost:5003`, per i bonus |
+| `STORAGE_BACKEND` | `memory` (default), `json`, `sqlite` |
+| `DATA_DIR` | cartella dati; default `./data` relativo alla directory di avvio |
 
-| Task | Argomento |
-|------|-----------|
-| 1 | API scikit-learn: Estimator, `fit`, `predict`, `score` |
-| 2.1–2.2 | Dataset Iris: caricamento, esplorazione, pair plot |
-| 2.3 | Train/test split e stratificazione |
-| 2.4–2.5 | Addestramento k-NN e predizioni |
-| 2.6 | Accuracy, confusion matrix, classification report |
-| 2.7 | Tuning dell'iperparametro `k`, trade-off bias/varianza |
+Il collaudo inietta porte 15001–15005 e URL coerenti; le istanze di resilienza
+usano 15101+. Ogni processo deve rispettare l'ambiente ricevuto.
 
-See [`Lab2_README.md`](./Lab2_README.md)
+Il comando di avvio previsto è `../../.venv/bin/python -m app`, dalla directory
+`services/<servizio>`. **Non è ancora eseguibile**: in questa fase `app/` è vuota.
+La configurazione futura è riportata come commento in `services.yaml`.
 
----
+## Comandi di verifica e test
 
-## Lab 3 — Prima applicazione ML: regressione con il dataset Boston Housing
+| Comando dalla root | Scopo |
+|---|---|
+| `make check` | ambiente, checksum di entrambe le copie, raccolta del collaudo |
+| `make check-template` | verifica i 17 file protetti e i manifest |
+| `make check-collection` | raccoglie i test forniti senza eseguirli |
+| `make test-unit SERVICE=user-service` | unit e contract test del singolo servizio, coverage ≥80% |
+| `make test-unit-all` | unit test dei tre servizi in processi separati |
+| `make test-own-integration` | test propri in `tests/service_integration/` |
+| `make acceptance` | collaudo dei servizi obbligatori |
+| `make test` | unit, integrazione propria, collaudo obbligatorio, in sequenza |
 
-**Livello:** Beginner · **Durata:** ~90 min · **Ambiente:** Google Colab · **Linguaggio:** Python 3
+I comandi applicativi saranno utilizzabili quando i relativi task saranno
+implementati. Nella fase 1 si esegue `make check`.
 
-Primo workflow ML di regressione end-to-end con scikit-learn: dal caricamento dei dati alla valutazione e al tuning degli iperparametri.
+## Git, bug e consegna
 
-| Task | Argomento |
-|------|-----------|
-| 1 | API scikit-learn per la regressione: Estimator, `fit`, `predict`, `score` |
-| 2.1–2.2 | Dataset Boston Housing: caricamento, esplorazione, correlazioni, scatter plot |
-| 2.3 | Train/test split |
-| 2.4 | Addestramento regressione lineare e coefficienti |
-| 2.5 | Predizioni e analisi dei residui |
-| 2.6 | Metriche di regressione: MAE, MSE, RMSE, R² |
-| 2.7 | Tuning iperparametri: Ridge, Lasso, Decision Tree Regressor |
+- Account di lavoro: `Manuel-Mezzanotte`; `origin` è il fork, `upstream` il docente.
+- Preparazione: branch `chore/phase-1-setup`, integrazione in `main` dopo le verifiche.
+- Servizi: branch dedicati, commit spec e task preservati senza squash.
+- Bug d'implementazione: issue, branch `fix/<svc>-<issue#>`, regressione rossa,
+  correzione in Vibe, verifiche verdi e commit con `closes #N`.
+- Bug di specifica: aggiornare requirements, design e tasks e passare dalla spec.
+- [BUGS.md](BUGS.md) contiene il registro: il minimo di due bug reali chiusi è un
+  requisito ancora da soddisfare durante lo sviluppo.
+- `collaudo.txt` e tag `v1.0.0` appartengono alla consegna finale; non vengono
+  creati nella preparazione.
 
-See [`Lab3_README.md`](./Lab3_README.md)
+## Provenienza e file protetti
+
+Il template era distribuito sotto `Exam/techconf-exam/`. I suoi file sono copiati
+identici nella root per usare i percorsi richiesti dal collaudo e da Kiro; la
+cartella originale resta intatta. Non sviluppare nella copia sotto `Exam/`.
+Vedere [provenienza](docs/template-provenance.md) e [verifiche della fase 1](docs/phase-1-verification.md).
+
+Nel materiale attuale vengono raccolti **37 test**, mentre la traccia ne menziona
+49. È una differenza del template ricevuto, non una riduzione del collaudo.
+
+Il precedente README dei workshop è conservato in
+[docs/workshops-readme.md](docs/workshops-readme.md).

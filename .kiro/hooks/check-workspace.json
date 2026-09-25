@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Controllo ambiente e integrita prima del prompt",
+      "description": "Verifica Python 3.12, dipendenze, checksum e raccolta del collaudo. Non avvia microservizi. Output in .checks/pre-prompt.log.",
+      "trigger": "UserPromptSubmit",
+      "action": {
+        "type": "command",
+        "command": "mkdir -p .checks && make check > .checks/pre-prompt.log 2>&1"
+      },
+      "timeout": 60,
+      "enabled": true
+    }
+  ]
+}
