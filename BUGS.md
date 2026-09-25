@@ -1,9 +1,10 @@
 # Registro dei bug
 
 Nove problemi reali individuati durante specifica, implementazione e verifiche,
-inclusi due difetti della suite di test. Alla fase 5 tutte le correzioni passano:
+inclusi due difetti della suite di test. Tutte le correzioni passano:
 599 unit/contract utenti, 1407 complessivi, 33 integrazioni proprie e 27 mandatory
-su ciascun backend. Le issue vengono chiuse con l'integrazione su main.
+su ciascun backend. Le nove issue sono chiuse e le correzioni integrate su main.
+Il collaudo finale della consegna è salvato in [collaudo.txt](collaudo.txt).
 
 | ID | Issue | Trovato da | Tipo | Requisito | Causa radice | Test di regressione | Commit |
 |---|---|---|---|---|---|---|---|
