@@ -54,9 +54,9 @@ class TestPostUsersCreate:
         resp = client.post("/api/v1/users", json=payload)
         assert "Location" in resp.headers
         location = resp.headers["Location"]
-        # Location should be /api/v1/users/{id}
-        assert location.startswith("http")
-        assert "/api/v1/users/" in location
+        # Location should be relative /api/v1/users/{id}
+        assert location.startswith("/api/v1/users/")
+        assert not location.startswith("http")
 
     def test_post_success_body_contains_id(self, client_with_backend):
         """POST response body contains a valid UUID id."""
@@ -215,11 +215,18 @@ class TestPostUsersCreate:
         }
         resp = client.post("/api/v1/users", json=payload)
         assert resp.status_code == 422
-        
-        # Verify no user was created: GET all should be empty
-        resp_list = client.get("/api/v1/users")
-        data = resp_list.get_json()
-        assert len(data["items"]) == 0
+        data = resp.get_json()
+        assert data["error"]["code"] == "VALIDATION_ERROR"
+        assert "details" in data["error"]
+
+        # Verify no user was created: send valid payload with same email, expect 201
+        payload_valid = {
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "email": "alice@example.com",
+        }
+        resp_valid = client.post("/api/v1/users", json=payload_valid)
+        assert resp_valid.status_code == 201
 
     def test_post_duplicate_email_409(self, client_with_backend):
         """Duplicate email returns 409."""
@@ -230,7 +237,7 @@ class TestPostUsersCreate:
             "email": "alice@example.com",
         }
         client.post("/api/v1/users", json=payload1)
-        
+
         payload2 = {
             "first_name": "Bob",
             "last_name": "Jones",
@@ -248,7 +255,7 @@ class TestPostUsersCreate:
             "email": "alice@example.com",
         }
         client.post("/api/v1/users", json=payload1)
-        
+
         payload2 = {
             "first_name": "Bob",
             "last_name": "Jones",
@@ -267,7 +274,7 @@ class TestPostUsersCreate:
             "email": "alice@example.com",
         }
         client.post("/api/v1/users", json=payload1)
-        
+
         payload2 = {
             "first_name": "Bob",
             "last_name": "Jones",
@@ -382,8 +389,63 @@ class TestPostUsersCreate:
         }
         resp = client.post("/api/v1/users", json=payload)
         assert resp.status_code == 422
-        
-        # Verify nothing was created
-        resp_list = client.get("/api/v1/users")
-        data = resp_list.get_json()
-        assert data["total"] == 0
+
+        # Verify nothing was created: send valid payload with same email, expect 201
+        payload_valid = {
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "email": "alice@example.com",
+        }
+        resp_valid = client.post("/api/v1/users", json=payload_valid)
+        assert resp_valid.status_code == 201
+
+    def test_post_location_header_relative(self, client_with_backend):
+        """Issue #4: Location header must be relative /api/v1/users/{id}, not absolute."""
+        client, _ = client_with_backend
+        payload = {
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "email": "alice@example.com",
+        }
+        resp = client.post("/api/v1/users", json=payload)
+        assert resp.status_code == 201
+        location = resp.headers.get("Location")
+        assert location is not None
+        assert location.startswith("/api/v1/users/")
+        assert not location.startswith("http")
+
+    def test_post_wrong_content_type_400_json(self, client_with_backend):
+        """Issue #4: text/plain body must return 400 with JSON error, not 415 HTML."""
+        client, _ = client_with_backend
+        resp = client.post(
+            "/api/v1/users",
+            data="{}",
+            content_type="text/plain",
+        )
+        assert resp.status_code == 400
+        # Must be JSON, not HTML
+        assert resp.content_type.startswith("application/json")
+        data = resp.get_json()
+        assert data["error"]["code"] == "MALFORMED_JSON"
+
+    def test_post_wrong_content_type_no_create_then_valid(self, client_with_backend):
+        """Issue #4: Invalid Content-Type doesn't create user; valid email can then be used."""
+        client, _ = client_with_backend
+        email = "alice@example.com"
+
+        # First attempt with wrong Content-Type
+        resp_invalid = client.post(
+            "/api/v1/users",
+            data="{}",
+            content_type="text/plain",
+        )
+        assert resp_invalid.status_code == 400
+
+        # Send valid payload with same email - should succeed (user was not created)
+        payload = {
+            "first_name": "Alice",
+            "last_name": "Smith",
+            "email": email,
+        }
+        resp_valid = client.post("/api/v1/users", json=payload)
+        assert resp_valid.status_code == 201

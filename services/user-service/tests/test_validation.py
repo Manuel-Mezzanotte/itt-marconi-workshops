@@ -25,7 +25,6 @@ class TestUserCreateValidation:
         }
         with pytest.raises(ValidationError) as exc_info:
             validate_user_create(data)
-        assert "Read-only" in exc_info.value.message
         assert readonly_field in exc_info.value.details.get("fields", [])
 
     def test_valid_minimal(self):

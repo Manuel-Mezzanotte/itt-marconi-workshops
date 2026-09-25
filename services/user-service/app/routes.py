@@ -5,7 +5,7 @@ Business logic is delegated to UserService.
 """
 from __future__ import annotations
 
-from flask import Blueprint, jsonify, request, url_for
+from flask import Blueprint, jsonify, request
 
 from app.errors import ValidationError
 from app.service import UserService
@@ -51,8 +51,8 @@ def create_routes_blueprint(service: UserService) -> Blueprint:
         # Create the user
         user = service.create_user(data)
 
-        # Response: 201 Created with Location header
-        location = url_for("users.get_user", user_id=user["id"], _external=True)
+        # Response: 201 Created with Location header (relative path per design)
+        location = f"/api/v1/users/{user['id']}"
         return jsonify(user), 201, {"Location": location}
 
     return bp

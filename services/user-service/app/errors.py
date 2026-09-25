@@ -69,6 +69,11 @@ def register_error_handlers(app: Flask) -> None:
     def handle_bad_request(exc):
         return _error_response("MALFORMED_JSON", str(exc), 400)
 
+    @app.errorhandler(415)
+    def handle_unsupported_media_type(exc):
+        """Issue #4: UnsupportedMediaType must return 400 MALFORMED_JSON as JSON."""
+        return _error_response("MALFORMED_JSON", str(exc), 400)
+
     @app.errorhandler(404)
     def handle_not_found(exc):
         return _error_response("NOT_FOUND", str(exc), 404)
