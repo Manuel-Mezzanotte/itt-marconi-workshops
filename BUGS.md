@@ -25,3 +25,11 @@ Non sono emersi nuovi difetti nelle verifiche eseguite su event-service:
 backend. Non sono state aggiunte issue artificiali. Il modello di avvio introdotto
 con la correzione BUG-06 è stato adottato anche per event-service e verificato
 con resolver indisponibile e FLASK_DEBUG=1.
+
+## Verifiche della fase 4
+
+Non sono emersi nuovi difetti nelle verifiche eseguite su registration-service.
+Passano 377 unit/contract del servizio, 33 integrazioni reali complessive e
+27 test mandatory per ciascun backend. Le regressioni delle fasi precedenti
+rimangono verdi: user-service 597 casi, event-service 431.
+Nessuna nuova issue aggiunta; le sei correzioni registrate restano chiuse.
