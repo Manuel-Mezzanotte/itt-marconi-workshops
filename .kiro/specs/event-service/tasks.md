@@ -32,7 +32,7 @@ Non modificare contracts/, tests/integration/ o Exam/.
     totali, limiti e query invalide; contratti di successo/errore.
   - _Requirements: REQ-EVT-02, REQ-EVT-B06, REQ-EVT-04, REQ-EVT-06_
 
-- [ ] T-05 — PUT e PATCH
+- [x] T-05 — PUT e PATCH
   - Implementare sostituzione e aggiornamento parziale con update atomico;
     timestamp, no-op, date risultanti, transizioni e controllo organizer.
   - Test su tre backend, stati consentiti/vietati, conflitti di transizione tra

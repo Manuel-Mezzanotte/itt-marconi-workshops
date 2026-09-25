@@ -20,4 +20,12 @@ def create_routes(service):
     def get_event(event_id):
         return jsonify(service.get(event_id))
 
+    @routes.put("/<event_id>")
+    def replace_event(event_id):
+        return jsonify(service.replace(event_id, request.get_json(silent=False)))
+
+    @routes.patch("/<event_id>")
+    def patch_event(event_id):
+        return jsonify(service.patch(event_id, request.get_json(silent=False)))
+
     return routes

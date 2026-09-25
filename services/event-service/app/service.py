@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from app.repositories import EventRepository
 from app.errors import ApiError
-from app.validation import validate_event, validate_query
+from app.validation import validate_dates, validate_event, validate_query, validate_transition
 
 
 def timestamp():
@@ -33,3 +33,33 @@ class EventService:
         page, size, filters = validate_query(page, page_size, status, city)
         items, total = self.repository.list(filters, page, size)
         return {"items": items, "page": page, "page_size": size, "total": total}
+
+    def replace(self, event_id, data):
+        self.get(event_id)
+        changes = validate_event(data)
+        self.user_client.require_organizer(changes["organizer_id"])
+        return self._save_changes(event_id, changes, replace=True)
+
+    def patch(self, event_id, data):
+        current = self.get(event_id)
+        changes = validate_event(data, partial=True)
+        if not changes:
+            return current
+        if "organizer_id" in changes:
+            self.user_client.require_organizer(changes["organizer_id"])
+        return self._save_changes(event_id, changes)
+
+    def _save_changes(self, event_id, changes, replace=False):
+        def transform(current):
+            updated = {**({} if replace else current), **changes}
+            validate_dates(updated)
+            validate_transition(current["status"], updated["status"])
+            return {
+                **updated, "id": current["id"], "created_at": current["created_at"],
+                "updated_at": timestamp(),
+            }
+
+        updated = self.repository.update(event_id, transform)
+        if updated is None:
+            raise ApiError(404, "NOT_FOUND", "Event does not exist")
+        return updated
