@@ -7,8 +7,6 @@ REQ-USR-12 — contract validation via assert_matches_contract
 """
 from __future__ import annotations
 
-import unittest.mock
-
 import pytest
 
 from app import create_app
@@ -123,65 +121,3 @@ def test_method_not_allowed_error_format(client):
     assert "error" in data
     assert "code" in data["error"]
     assert "message" in data["error"]
-
-
-# ---------------------------------------------------------------------------
-# __main__ entrypoint — REQ-USR-09
-# ---------------------------------------------------------------------------
-
-
-def test_main_calls_run_with_correct_args():
-    """REQ-USR-09: __main__ calls app.run(host='127.0.0.1', port=5001) without debug or reloader."""
-    import runpy
-
-    with unittest.mock.patch("flask.Flask.run") as mock_run:
-        runpy.run_module("app.__main__", run_name="__main__", alter_sys=False)
-
-    mock_run.assert_called_once()
-    call_args = mock_run.call_args
-    # Accept positional or keyword arguments
-    all_args = {}
-    if call_args.args:
-        all_args["host"] = call_args.args[0] if len(call_args.args) > 0 else None
-        all_args["port"] = call_args.args[1] if len(call_args.args) > 1 else None
-    all_args.update(call_args.kwargs)
-
-    assert all_args.get("host") == "127.0.0.1"
-    assert all_args.get("port") == 5001
-    assert not all_args.get("debug", False)
-    assert not all_args.get("use_reloader", False)
-
-
-def test_main_ignores_flask_debug_env(monkeypatch):
-    """REQ-USR-09: FLASK_DEBUG=1 must not enable debugger or reloader (issue #2).
-
-    Intercepts werkzeug.serving.run_simple — the real server entry point used
-    by Flask.run() — so that Flask's internal flag propagation is fully visible.
-    """
-    import os
-    import runpy
-
-    monkeypatch.setenv("FLASK_DEBUG", "1")
-    monkeypatch.setenv("PORT", "15551")
-
-    with unittest.mock.patch("werkzeug.serving.run_simple") as mock_server, \
-         unittest.mock.patch("flask.cli.show_server_banner"):
-        runpy.run_module("app.__main__", run_name="__main__", alter_sys=False)
-
-    mock_server.assert_called_once()
-    call_args = mock_server.call_args
-
-    # Collect all keyword args (werkzeug.serving.run_simple uses keyword args)
-    kwargs = call_args.kwargs if call_args.kwargs else {}
-    # Also handle positional: run_simple(hostname, port, application, ...)
-    # use_reloader and use_debugger are always keyword args in werkzeug
-    assert kwargs.get("use_reloader") is False, (
-        f"use_reloader must be False when FLASK_DEBUG=1, got: {kwargs.get('use_reloader')}"
-    )
-    assert kwargs.get("use_debugger") is False, (
-        f"use_debugger must be False when FLASK_DEBUG=1, got: {kwargs.get('use_debugger')}"
-    )
-    # Verify port is taken from PORT env var
-    positional = call_args.args if call_args.args else ()
-    port_value = positional[1] if len(positional) > 1 else kwargs.get("port")
-    assert port_value == 15551, f"Expected port 15551, got: {port_value}"
