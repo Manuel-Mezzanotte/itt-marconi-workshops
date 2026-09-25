@@ -10,9 +10,9 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
-from app.errors import EmailAlreadyExists
+from app.errors import UserNotFound
 from app.repositories import UserRepository
-from app.validation import validate_user_create
+from app.validation import validate_pagination, validate_role_filter, validate_user_create
 
 
 class UserService:
@@ -64,6 +64,26 @@ class UserService:
 
         # Persist to repository
         return self._repo.create(record)
+
+    def get_user(self, user_id: str) -> dict[str, Any]:
+        user = self._repo.get(user_id)
+        if user is None:
+            raise UserNotFound(user_id)
+        return user
+
+    def list_users(
+        self,
+        role: str | None = None,
+        email: str | None = None,
+        page: str | None = None,
+        page_size: str | None = None,
+    ) -> dict[str, Any]:
+        page_number, size = validate_pagination(page, page_size)
+        filters = {"role": validate_role_filter(role)}
+        if email is not None:
+            filters["email"] = email.lower()
+        items, total = self._repo.list(filters, page_number, size)
+        return {"items": items, "page": page_number, "page_size": size, "total": total}
 
 
 def _format_timestamp(dt: datetime) -> str:

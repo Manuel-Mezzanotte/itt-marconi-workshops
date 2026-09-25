@@ -55,4 +55,17 @@ def create_routes_blueprint(service: UserService) -> Blueprint:
         location = f"/api/v1/users/{user['id']}"
         return jsonify(user), 201, {"Location": location}
 
+    @bp.route("/users", methods=["GET"])
+    def list_users():
+        return jsonify(service.list_users(
+            role=request.args.get("role"),
+            email=request.args.get("email"),
+            page=request.args.get("page"),
+            page_size=request.args.get("page_size"),
+        ))
+
+    @bp.route("/users/<user_id>", methods=["GET"])
+    def get_user(user_id):
+        return jsonify(service.get_user(user_id))
+
     return bp

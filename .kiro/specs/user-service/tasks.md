@@ -39,7 +39,7 @@ il task successivo. Non modificare contratti, collaudo o la copia sotto Exam/.
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 2.1, 3.1, 13.1, 13.2, 13.4, 14.1, 14.2, 14.3, 14.5, 14.6, 14.7, 14.9, 15.1, 15.2, 15.5_
   - _Traceability: REQ-USR-01, REQ-USR-B01, REQ-USR-B02, REQ-USR-10, REQ-USR-11, REQ-USR-12_
 
-- [ ] 4. Lettura utenti, filtri e paginazione [T-04]
+- [x] 4. Lettura utenti, filtri e paginazione [T-04]
   - Implementa UserService.get_user/list_users e GET /api/v1/users e /api/v1/users/{id} con validazione della query e normalizzazione del filtro email. Distingui filtro assente e stringa vuota.
   - Test sui tre backend: record presente/assente, lista vuota, default, pagine consecutive stabili, pagina oltre il totale, page_size=100 e valori invalidi, filtri role/email singoli e combinati, totale dopo i filtri, email con maiuscole.
   - Usa il validator per GET singolo/lista e relativi errori dichiarati. Errori 404 e 422 restano nel formato uniforme.
