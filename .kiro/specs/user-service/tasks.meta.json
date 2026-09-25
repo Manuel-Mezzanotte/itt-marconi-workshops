@@ -1,0 +1,36 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Avvio, configurazione e health [T-01]": [
+      {
+        "executionId": "dcf18059-3ef7-4568-9f82-5104bc57b936",
+        "chatSessionId": "sess_874e3e3e-7099-429a-a3fe-a4e4fb6c6d0c",
+        "timestamp": 1790347245558
+      },
+      {
+        "executionId": "dcf18059-3ef7-4568-9f82-5104bc57b936",
+        "chatSessionId": "sess_874e3e3e-7099-429a-a3fe-a4e4fb6c6d0c",
+        "timestamp": 1790350092429
+      }
+    ],
+    "2. Repository memory, JSON e SQLite [T-02]": [
+      {
+        "executionId": "9610c1bf-f1b1-4091-b41b-7d89ec83b5b9",
+        "chatSessionId": "sess_85eb0e02-3add-4101-aea5-fb3ac4144337",
+        "timestamp": 1790350257592
+      },
+      {
+        "executionId": "9610c1bf-f1b1-4091-b41b-7d89ec83b5b9",
+        "chatSessionId": "sess_85eb0e02-3add-4101-aea5-fb3ac4144337",
+        "timestamp": 1790350462203
+      }
+    ],
+    "3. Validazione e creazione utenti [T-03]": [
+      {
+        "executionId": "c972c991-5cb4-4410-9bd7-3dbb08b0fb08",
+        "chatSessionId": "sess_01eb9fc4-a54d-4a39-8247-ae2b3b2375b9",
+        "timestamp": 1790351260868
+      }
+    ]
+  }
+}

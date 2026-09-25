@@ -122,6 +122,12 @@ Non usare Run all tasks, Quick Spec, Design-First o Vibe per creare l'applicazio
 Nessun codice applicativo prima del commit di tasks. Date reali dei commit,
 nessuna ricostruzione o retrodatazione della cronologia.
 
+Il task attivo delimita anche i metodi del service e le route: non anticipare
+operazioni assegnate ai task successivi. Eseguire il lavoro nella sessione Spec
+aperta da Start task, mantenendo il flusso nativo di esecuzione di Kiro e una
+sola revisione per task. Limitare le letture duplicate. Ogni bug riprodotto va segnalato:
+fermarsi prima della correzione, che seguirà il workflow dedicato sotto.
+
 ## Branch e bug
 
 Preparazione su `chore/phase-1-setup`, da integrare in `main` dopo le verifiche.

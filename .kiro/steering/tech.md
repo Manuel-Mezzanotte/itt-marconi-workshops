@@ -29,6 +29,10 @@ inclusion: always
   Le eccezioni di mapping documentate per `stats` e `summary` restano valide.
 - `/health` deve funzionare senza interrogare le dipendenze: il collaudo deve poter
   avviare istanze con una dipendenza spenta e provarne le API.
+- Verificare il tipo prima di confronti con enum o limiti numerici: liste e
+  oggetti JSON devono produrre 422, non TypeError; bool non è un importo o una capienza.
+- Location deve rispettare il design senza dipendere da route di task futuri.
+  I timestamp seguono la precisione scelta nel design, senza troncamenti impliciti.
 
 ## Persistenza
 
@@ -45,6 +49,11 @@ devono distinguere i servizi anche quando viene fornita una directory comune.
 - Almeno un test per operazione API con `assert_matches_contract` del template.
   Con Flask test client usare l'adattatore dict `status_code`, `headers`, `json`
   supportato dal validator, senza cambiare `contracts/validator.py`.
+- I test intermedi usano soltanto le API già implementate. Verificare codici
+  e dati richiesti dal contratto, evitando vincoli arbitrari sul testo dei messaggi.
+- Usare pytest con output conciso e codice di uscita diretto, senza pipe a head
+  o tail. Dopo una suite verde, ripeterla soltanto se cambiano file o restano
+  problemi concreti da verificare; altrimenti concludere il task.
 - Coverage almeno 80% per servizio; `make test-unit SERVICE=user-service` misura
   soltanto l'app di quel servizio. La configurazione include anche i rami.
 - Test di integrazione propri con processi reali, porte libere, directory temporanee

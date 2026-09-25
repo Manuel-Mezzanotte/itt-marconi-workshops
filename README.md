@@ -4,16 +4,20 @@ Progetto per l'esame pratico Spec-Driven Development con Kiro.
 Fork: [Manuel-Mezzanotte/itt-marconi-workshops](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops).
 Traccia: [Exam/Exam.MD](Exam/Exam.MD).
 
-## Stato: fase 1, preparazione
+## Stato: fase 2 completata — user-service
 
-Ambiente Python 3.12, dipendenze, struttura, steering, hook, manifest e comandi di
-verifica sono predisposti. **Nessun microservizio è implementato** e non sono
-ancora state create le spec dei servizi. Non sono disponibili server, test unitari
-applicativi, coverage o un collaudo funzionale superato.
+User-service espone CRUD completo, filtri per ruolo/email e paginazione.
+Le specifiche sono state committate nell'ordine requirements, design e tasks;
+tutti gli otto task sono completati, con test e commit distinti.
 
-`services.yaml` contiene `services: {}`: i servizi verranno dichiarati
-progressivamente dopo l'implementazione del relativo entrypoint e di `/health`.
-Un'esecuzione con test skipped non è un collaudo superato.
+Verifica finale del servizio: **597 casi unitari e di contratto superati**,
+coverage **98,46% includendo i rami**. Gli otto test del docente IT-U01..IT-U08
+passano su ciascun backend: memory, JSON e SQLite, senza skipped.
+Vedere il [report della fase 2](docs/phase-2-verification.md).
+
+`services.yaml` abilita soltanto user-service. Event-service e
+registration-service restano alle fasi 3 e 4: il collaudo dell'intera piattaforma
+non è ancora completato. Un test skipped non equivale a un test superato.
 
 ## Ambiente riproducibile
 
@@ -59,7 +63,7 @@ Non scrivere codice applicativo prima del commit di tasks.
 
 | Servizio | Porta di sviluppo | Dipendenze HTTP | Stato |
 |---|---:|---|---|
-| user-service | 5001 | nessuna | non implementato |
+| user-service | 5001 | nessuna | completo e collaudato sui tre backend |
 | event-service | 5002 | user-service | non implementato |
 | registration-service | 5003 | user-service, event-service | non implementato |
 | feedback-service | 5004 | registration-service, event-service | bonus non avviato |
@@ -77,9 +81,15 @@ Non scrivere codice applicativo prima del commit di tasks.
 Il collaudo inietta porte 15001–15005 e URL coerenti; le istanze di resilienza
 usano 15101+. Ogni processo deve rispettare l'ambiente ricevuto.
 
-Il comando di avvio previsto è `../../.venv/bin/python -m app`, dalla directory
-`services/<servizio>`. **Non è ancora eseguibile**: in questa fase `app/` è vuota.
-La configurazione futura è riportata come commento in `services.yaml`.
+Il comando di avvio è `../../.venv/bin/python -m app`, dalla directory
+`services/<servizio>`. Al momento è avviabile soltanto user-service:
+
+```bash
+cd services/user-service
+PORT=5001 STORAGE_BACKEND=sqlite DATA_DIR=./data ../../.venv/bin/python -m app
+```
+
+Configurazione, API ed esempi sono nel [README del servizio](services/user-service/README.md).
 
 ## Comandi di verifica e test
 
@@ -94,8 +104,10 @@ La configurazione futura è riportata come commento in `services.yaml`.
 | `make acceptance` | collaudo dei servizi obbligatori |
 | `make test` | unit, integrazione propria, collaudo obbligatorio, in sequenza |
 
-I comandi applicativi saranno utilizzabili quando i relativi task saranno
-implementati. Nella fase 1 si esegue `make check`.
+Per il collaudo del solo servizio utenti:
+`.venv/bin/python -m pytest tests/integration/test_user.py -v`.
+Il report della fase 2 contiene la ripetizione isolata sui tre backend.
+I comandi per tutti i servizi e l'integrazione tra servizi richiedono le fasi successive.
 
 ## Git, bug e consegna
 
@@ -105,8 +117,9 @@ implementati. Nella fase 1 si esegue `make check`.
 - Bug d'implementazione: issue, branch `fix/<svc>-<issue#>`, regressione rossa,
   correzione in Vibe, verifiche verdi e commit con `closes #N`.
 - Bug di specifica: aggiornare requirements, design e tasks e passare dalla spec.
-- [BUGS.md](BUGS.md) contiene il registro: il minimo di due bug reali chiusi è un
-  requisito ancora da soddisfare durante lo sviluppo.
+- [BUGS.md](BUGS.md) contiene sei difetti reali corretti e verificati, con issue,
+  requisiti, regressioni e commit. La chiusura delle issue segue l'integrazione
+  delle correzioni su `main`.
 - `collaudo.txt` e tag `v1.0.0` appartengono alla consegna finale; non vengono
   creati nella preparazione.
 
