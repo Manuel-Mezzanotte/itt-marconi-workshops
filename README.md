@@ -4,15 +4,16 @@ Progetto per l'esame pratico Spec-Driven Development con Kiro.
 Fork: [Manuel-Mezzanotte/itt-marconi-workshops](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops).
 Traccia: [Exam/Exam.MD](Exam/Exam.MD).
 
-## Stato: fase 1, preparazione
+## Stato: fase 2, user-service fino al T-02
 
-Ambiente Python 3.12, dipendenze, struttura, steering, hook, manifest e comandi di
-verifica sono predisposti. **Nessun microservizio è implementato** e non sono
-ancora state create le spec dei servizi. Non sono disponibili server, test unitari
-applicativi, coverage o un collaudo funzionale superato.
+Le specifiche di user-service sono state committate nell'ordine requirements,
+design e tasks. T-01 e T-02 sono stati eseguiti con Start task in Kiro:
+configurazione, `/health`, errori e repository memory/JSON/SQLite con test propri.
+Le API utenti e il collegamento dei repository alla factory iniziano nel T-03.
+Gli altri servizi non sono ancora implementati; il collaudo funzionale è pendente.
 
-`services.yaml` contiene `services: {}`: i servizi verranno dichiarati
-progressivamente dopo l'implementazione del relativo entrypoint e di `/health`.
+`services.yaml` contiene ancora `services: {}`: user-service verrà abilitato
+nel T-08, dopo il completamento delle API.
 Un'esecuzione con test skipped non è un collaudo superato.
 
 ## Ambiente riproducibile
@@ -59,7 +60,7 @@ Non scrivere codice applicativo prima del commit di tasks.
 
 | Servizio | Porta di sviluppo | Dipendenze HTTP | Stato |
 |---|---:|---|---|
-| user-service | 5001 | nessuna | non implementato |
+| user-service | 5001 | nessuna | T-01 e T-02; API utenti da implementare |
 | event-service | 5002 | user-service | non implementato |
 | registration-service | 5003 | user-service, event-service | non implementato |
 | feedback-service | 5004 | registration-service, event-service | bonus non avviato |
@@ -77,9 +78,10 @@ Non scrivere codice applicativo prima del commit di tasks.
 Il collaudo inietta porte 15001–15005 e URL coerenti; le istanze di resilienza
 usano 15101+. Ogni processo deve rispettare l'ambiente ricevuto.
 
-Il comando di avvio previsto è `../../.venv/bin/python -m app`, dalla directory
-`services/<servizio>`. **Non è ancora eseguibile**: in questa fase `app/` è vuota.
-La configurazione futura è riportata come commento in `services.yaml`.
+Il comando di avvio è `../../.venv/bin/python -m app`, dalla directory
+`services/<servizio>`. Solo user-service dispone dell'entrypoint e di `/health`;
+le altre directory `app/` sono ancora vuote. La configurazione futura del collaudo
+è riportata come commento in `services.yaml`.
 
 ## Comandi di verifica e test
 
@@ -94,8 +96,8 @@ La configurazione futura è riportata come commento in `services.yaml`.
 | `make acceptance` | collaudo dei servizi obbligatori |
 | `make test` | unit, integrazione propria, collaudo obbligatorio, in sequenza |
 
-I comandi applicativi saranno utilizzabili quando i relativi task saranno
-implementati. Nella fase 1 si esegue `make check`.
+Sono disponibili `make check` e i test del codice presente in user-service.
+I comandi per tutti i servizi e il collaudo richiedono i task successivi.
 
 ## Git, bug e consegna
 

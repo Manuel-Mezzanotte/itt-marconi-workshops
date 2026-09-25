@@ -22,7 +22,7 @@ il task successivo. Non modificare contratti, collaudo o la copia sotto Exam/.
   - _Requirements: 10.1, 11.1, 11.2, 12.1, 12.6, 15.1, 15.2, 15.5_
   - _Traceability: REQ-USR-07, REQ-USR-08, REQ-USR-09, REQ-USR-12_
 
-- [ ] 2. Repository memory, JSON e SQLite [T-02]
+- [x] 2. Repository memory, JSON e SQLite [T-02]
   - Implementa l'interfaccia UserRepository e la factory get_repository. Operazioni: create, get, get_by_email, list, update, delete. Mantieni i valori di ritorno definiti nel design.
   - Memory per istanza con RLock; JSON con RLock e scrittura atomica; SQLite con connessioni chiuse per operazione e transazioni esplicite. Unicità email verificata insieme alla scrittura anche negli update; le operazioni rifiutate non mutano i dati.
   - Ordinamento stabile, filtri combinati, totale filtrato e pagine fuori intervallo vuote, anche con indici molto grandi. Restituisci copie dei record.
