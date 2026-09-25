@@ -11,7 +11,7 @@ Materiale protetto e altri servizi non vengono modificati.
   - Test configurazione, isolamento, health/contratto e metodi/path errati.
   - _Requirements: REQ-REG-04, REQ-REG-05_
 
-- [ ] T-02 — Repository e prenotazioni atomiche
+- [x] T-02 — Repository e prenotazioni atomiche
   - Memory/JSON/SQLite con reserve, get/list/count, update_status e delete.
   - Duplicati prima di capienza, solo confirmed contate; transazioni/lock,
     indice parziale SQLite, riiscrizione dopo cancellazione, copie e rollback.
