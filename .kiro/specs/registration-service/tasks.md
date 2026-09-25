@@ -5,7 +5,7 @@ requirements e design precedono questo piano. Comando intermedio dalla cartella
 del servizio: `../../.venv/bin/python -m pytest -c ../../pyproject.toml tests -q`.
 Materiale protetto e altri servizi non vengono modificati.
 
-- [ ] T-01 — Configurazione, errori, health e avvio
+- [x] T-01 — Configurazione, errori, health e avvio
   - Factory e configurazione user/event, PORT, backend/DATA_DIR; handler JSON.
   - Avvio locale senza debugger/reloader/reverse DNS, health indipendente.
   - Test configurazione, isolamento, health/contratto e metodi/path errati.
