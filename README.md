@@ -4,7 +4,7 @@ Progetto per l'esame pratico Spec-Driven Development con Kiro.
 Fork: [Manuel-Mezzanotte/itt-marconi-workshops](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops).
 Traccia: [Exam/Exam.MD](Exam/Exam.MD).
 
-## Stato: fase 5 completata — verifica complessiva
+## Consegna v1.0.0
 
 User-service, event-service e registration-service sono implementati. Le iscrizioni
 verificano utenti/eventi via HTTP, acquisiscono il prezzo dall'evento e gestiscono
@@ -29,15 +29,18 @@ Report: [fase 2](docs/phase-2-verification.md), [fase 3](docs/phase-3-verificati
 [fase 4](docs/phase-4-verification.md) e [fase 5](docs/phase-5-verification.md).
 La [matrice di tracciabilità](docs/traceability.md) collega requisiti, task, codice e test.
 
-`services.yaml` abilita i tre servizi obbligatori. Resta la consegna della fase 6:
-collaudo.txt finale e tag v1.0.0 non sono ancora creati. I bonus non sono implementati.
+`services.yaml` abilita i tre servizi obbligatori. La consegna è identificata dal
+[tag annotato v1.0.0](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops/tree/v1.0.0)
+su `main`. Il [collaudo finale](collaudo.txt) contiene l'output integrale delle
+tre esecuzioni mandatory; la [checklist di consegna](docs/delivery-checklist.md)
+riporta le verifiche concluse. I due servizi bonus non sono implementati.
 
 ## Ambiente riproducibile
 
-Prerequisiti: Python **3.12**, Git, Kiro IDE; `make` e `shasum` per i comandi rapidi.
+Prerequisiti di esecuzione: Python **3.12**, Git; `make` e `shasum` per i comandi rapidi.
 
 ```bash
-git clone https://github.com/Manuel-Mezzanotte/itt-marconi-workshops.git
+git clone --branch v1.0.0 https://github.com/Manuel-Mezzanotte/itt-marconi-workshops.git
 cd itt-marconi-workshops
 make setup
 make check
@@ -138,7 +141,8 @@ Configurazione, API ed esempi: [user-service](services/user-service/README.md),
 | `make test` | unit, integrazione propria, collaudo obbligatorio, in sequenza |
 
 Il collaudo obbligatorio è `.venv/bin/python -m pytest tests/integration -m mandatory -v`.
-Il report della fase 4 contiene la ripetizione isolata sui tre backend.
+L'output finale sui tre backend è in [collaudo.txt](collaudo.txt); la procedura
+per ripeterlo con dati isolati è nel [report della fase 4](docs/phase-4-verification.md).
 `make test-own-integration` esegue già i casi event/registration su tutti i backend.
 I comandi globali sono utilizzabili; i package app dei tre servizi vengono
 testati in processi separati per evitare collisioni negli import.
@@ -152,10 +156,10 @@ testati in processi separati per evitare collisioni negli import.
   correzione in Vibe, verifiche verdi e commit con `closes #N`.
 - Bug di specifica: aggiornare requirements, design e tasks e passare dalla spec.
 - [BUGS.md](BUGS.md) contiene nove difetti reali corretti e verificati, con issue,
-  requisiti, regressioni e commit. La chiusura delle issue segue l'integrazione
-  delle correzioni su `main`.
-- `collaudo.txt` e tag `v1.0.0` appartengono alla consegna finale; non vengono
-  creati nella preparazione.
+  requisiti, regressioni e commit. Tutte le nove issue sono chiuse e le
+  correzioni integrate su `main`.
+- Il tag annotato `v1.0.0` su `main` include `collaudo.txt`, documentazione,
+  specifiche, implementazioni e test della consegna.
 
 ## Provenienza e file protetti
 
