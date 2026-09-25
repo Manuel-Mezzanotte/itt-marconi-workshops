@@ -1,9 +1,9 @@
 # Registro dei bug
 
-Sei problemi reali individuati durante specifica, implementazione e collaudo di
-user-service. Tutte le correzioni sono verificate: 597 unit/contract superati e
-IT-U01..IT-U08 superati su memory, JSON e SQLite. Le issue vengono chiuse con
-l'integrazione delle correzioni su main.
+Nove problemi reali individuati durante specifica, implementazione e verifiche,
+inclusi due difetti della suite di test. Alla fase 5 tutte le correzioni passano:
+599 unit/contract utenti, 1407 complessivi, 33 integrazioni proprie e 27 mandatory
+su ciascun backend. Le issue vengono chiuse con l'integrazione su main.
 
 | ID | Issue | Trovato da | Tipo | Requisito | Causa radice | Test di regressione | Commit |
 |---|---|---|---|---|---|---|---|
@@ -13,9 +13,9 @@ l'integrazione delle correzioni su main.
 | BUG-04 | [#4](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops/issues/4) | Prova del blueprint POST del T-03 con Flask test_client | impl | REQ-USR-01, REQ-USR-11, design Errori e parsing | Location dipende da una route GET non ancora implementata; UnsupportedMediaType non viene convertito nell'errore JSON previsto | Regressioni rosse su tre backend per Location e Content-Type; fix Kiro Default/Vibe, poi 297 test verdi | f0cf6c8, branch fix/user-4; collaudo superato sui tre backend |
 | BUG-05 | [#5](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops/issues/5) | Revisione del formato timestamp del T-03 | impl | REQ-USR-10, design UserService | Lo slicing [:-3] elimina tre cifre dei microsecondi; il test del formato replica la precisione errata | Nove casi rossi prima del fix Kiro Default/Vibe, poi formato a sei cifre e 324 test verdi | fd7dc26, branch fix/user-5; collaudo superato sui tre backend |
 | BUG-06 | [#6](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops/issues/6) | Collaudo T-08: 8 errori di setup del backend JSON | impl | REQ-USR-09, REQ-USR-07 | HTTPServer.server_bind esegue getfqdn sull'indirizzo locale e attende il resolver prima di accettare richieste | test_main_starts_when_reverse_dns_is_unavailable: rosso prima del fix; poi 597 unit/contract verdi e IT-U01..IT-U08 verdi su memory, JSON e SQLite | ce5b863, branch fix/user-6; socket TCP passato a Werkzeug tramite fd |
-| BUG-07 | [#7](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops/issues/7) | Audit di tracciabilità della fase 5 | impl (test) | REQ-USR-12.5 | Riferimenti presenti solo nelle descrizioni di classe/modulo, non esposti sui singoli casi pytest | scripts/check_traceability.py: 254 casi invalidi prima, zero dopo; 597 unit e 8 casi di collaudo user superati | branch fix/user-7; marker req espliciti ed ereditabili |
-| BUG-08 | [#8](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops/issues/8) | Revisione della gestione errori della fase 5 | impl | Platform Standards §4, design user-service Errori e parsing | Un'eccezione inattesa dal repository arrivava all'handler HTML 500 predefinito di Flask | test_internal_storage_error_returns_uniform_json_without_details: rosso con text/html, poi JSON INTERNAL_ERROR senza dettagli interni; 598 unit e 27 mandatory passati | branch fix/user-8; handler HTTP 500 uniforme |
-| BUG-09 | [#9](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops/issues/9) | Verifica della suite con ambiente valorizzato | impl (test) | REQ-USR-09, REQ-USR-12 | test_defaults assumeva PORT/STORAGE_BACKEND/DATA_DIR assenti e falliva con configurazione esterna valida | Prima 1 failed/11 passed con PORT=15501 e backend sqlite; poi 599 unit e 27 mandatory verdi nello stesso ambiente, con test esplicito di ambiente/override | branch fix/user-9; fixture isola l'ambiente dei test di configurazione |
+| BUG-07 | [#7](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops/issues/7) | Audit di tracciabilità della fase 5 | impl (test) | REQ-USR-12.5 | Riferimenti presenti solo nelle descrizioni di classe/modulo, non esposti sui singoli casi pytest | scripts/check_traceability.py: 254 casi invalidi prima, zero dopo; 597 unit e 8 casi di collaudo user superati | 0641efa, branch fix/user-7; marker req espliciti ed ereditabili |
+| BUG-08 | [#8](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops/issues/8) | Revisione della gestione errori della fase 5 | impl | Platform Standards §4, design user-service Errori e parsing | Un'eccezione inattesa dal repository arrivava all'handler HTML 500 predefinito di Flask | test_internal_storage_error_returns_uniform_json_without_details: rosso con text/html, poi JSON INTERNAL_ERROR senza dettagli interni; 598 unit e 27 mandatory passati | a4f09ad, branch fix/user-8; handler HTTP 500 uniforme |
+| BUG-09 | [#9](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops/issues/9) | Verifica della suite con ambiente valorizzato | impl (test) | REQ-USR-09, REQ-USR-12 | test_defaults assumeva PORT/STORAGE_BACKEND/DATA_DIR assenti e falliva con configurazione esterna valida | Prima 1 failed/11 passed con PORT=15501 e backend sqlite; poi 599 unit e 27 mandatory verdi nello stesso ambiente, con test esplicito di ambiente/override | 6c34dc8, branch fix/user-9; fixture isola l'ambiente dei test di configurazione |
 
 Registrare soltanto difetti reali. Per il processo di gestione e la distinzione
 tra bug di implementazione e di specifica, vedere `.kiro/steering/structure.md`
@@ -36,3 +36,11 @@ Passano 377 unit/contract del servizio, 33 integrazioni reali complessive e
 27 test mandatory per ciascun backend. Le regressioni delle fasi precedenti
 rimangono verdi: user-service 597 casi, event-service 431.
 Nessuna nuova issue aggiunta; le sei correzioni registrate restano chiuse.
+
+## Verifiche della fase 5
+
+Le issue #7, #8 e #9 documentano le nuove anomalie: marker dei test mancanti,
+risposta HTML per errori interni degli utenti e dipendenza del test dei default
+dall'ambiente della shell. Ogni problema è stato riprodotto prima della correzione,
+con branch dedicato e regressione verde successiva. La prova completa da copia
+pulita e ambiente virtuale nuovo è riportata in docs/phase-5-verification.md.

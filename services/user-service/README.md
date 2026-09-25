@@ -62,7 +62,8 @@ curl -i http://127.0.0.1:5001/api/v1/users \
 
 Gli errori seguono `{"error":{"code":"...","message":"...","details":{}}}`:
 400 JSON malformato/Content-Type errato, 404 risorsa assente, 405 metodo non
-previsto, 409 EMAIL_ALREADY_EXISTS, 422 VALIDATION_ERROR.
+previsto, 409 EMAIL_ALREADY_EXISTS, 422 VALIDATION_ERROR. Anche gli errori interni
+producono JSON: 500 INTERNAL_ERROR, senza dettagli dell'eccezione nel body.
 
 ## Verifiche
 
@@ -74,10 +75,11 @@ make test-unit SERVICE=user-service
 make check
 ```
 
-Risultati del 25 settembre 2026: **597 casi unitari e di contratto superati**,
-coverage **98,46% includendo i rami** (linee 98,68%, rami 97,67%).
+Risultati aggiornati alla fase 5, 25 settembre 2026: **599 casi unitari e di contratto
+superati**, coverage **98,47% includendo i rami** (linee 98,69%, rami 97,67%).
 IT-U01..IT-U08: **8/8 superati per ciascuno dei tre backend**, con processi
 reali, dati temporanei separati e cleanup verificato.
 
-Specifiche: `.kiro/specs/user-service/`. Report riproducibile:
-[verifica fase 2](../../docs/phase-2-verification.md).
+Specifiche: `.kiro/specs/user-service/`. Report:
+[verifica fase 2](../../docs/phase-2-verification.md) e
+[verifica complessiva fase 5](../../docs/phase-5-verification.md).

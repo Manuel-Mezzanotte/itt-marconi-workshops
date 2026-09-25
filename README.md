@@ -4,7 +4,7 @@ Progetto per l'esame pratico Spec-Driven Development con Kiro.
 Fork: [Manuel-Mezzanotte/itt-marconi-workshops](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops).
 Traccia: [Exam/Exam.MD](Exam/Exam.MD).
 
-## Stato: fase 4 completata — tre servizi obbligatori
+## Stato: fase 5 completata — verifica complessiva
 
 User-service, event-service e registration-service sono implementati. Le iscrizioni
 verificano utenti/eventi via HTTP, acquisiscono il prezzo dall'evento e gestiscono
@@ -13,7 +13,7 @@ i task sono completati con verifiche e commit distinti.
 
 | Servizio | Casi unitari/contratto superati | Coverage con rami |
 |---|---:|---:|
-| user-service | 597 | 98,46% |
+| user-service | 599 | 98,47% |
 | event-service | 431 | 99,59% |
 | registration-service | 377 | 99,79% |
 
@@ -21,12 +21,16 @@ Il collaudo obbligatorio del docente passa **27/27 su ciascuno dei tre backend**
 incluso il percorso completo IT-J01; zero skipped, dieci test bonus esclusi dalla
 selezione mandatory. Passano inoltre **33 test propri con processi reali**,
 inclusi concorrenza, ciascuna dipendenza spenta e persistenza ai riavvii.
-Report: [fase 2](docs/phase-2-verification.md), [fase 3](docs/phase-3-verification.md)
-e [fase 4](docs/phase-4-verification.md).
+La verifica è stata ripetuta da una copia dei soli file committati, con ambiente
+virtuale nuovo e dipendenze installate da requirements.lock: 1407 unit/contract
+e 33 integrazioni proprie superate. Il controllo automatico collega tutti i
+41 requisiti a test raccolti da pytest.
+Report: [fase 2](docs/phase-2-verification.md), [fase 3](docs/phase-3-verification.md),
+[fase 4](docs/phase-4-verification.md) e [fase 5](docs/phase-5-verification.md).
+La [matrice di tracciabilità](docs/traceability.md) collega requisiti, task, codice e test.
 
-`services.yaml` abilita i tre servizi obbligatori. Restano la revisione complessiva
-della fase 5 e la consegna della fase 6: collaudo.txt finale e tag v1.0.0 non sono
-ancora creati. I servizi bonus non sono implementati.
+`services.yaml` abilita i tre servizi obbligatori. Resta la consegna della fase 6:
+collaudo.txt finale e tag v1.0.0 non sono ancora creati. I bonus non sono implementati.
 
 ## Ambiente riproducibile
 
@@ -60,7 +64,8 @@ Il file degli standard riproduce il §4 della traccia.
 
 L'hook `.kiro/hooks/check-workspace.json` esegue `make check` prima di un prompt
 e salva l'esito in `.checks/pre-prompt.log`, escluso da Git. Verifica l'ambiente,
-l'integrità del template e la raccolta del collaudo; non avvia microservizi.
+l'integrità del template, la raccolta del collaudo e la tracciabilità dei test
+propri; non avvia microservizi.
 Se l'hook risulta disattivato dopo aver autorizzato la cartella, ricaricare la
 finestra di Kiro per inizializzare il workspace come trusted.
 
@@ -120,9 +125,10 @@ Configurazione, API ed esempi: [user-service](services/user-service/README.md),
 
 | Comando dalla root | Scopo |
 |---|---|
-| `make check` | ambiente, checksum di entrambe le copie, raccolta del collaudo |
+| `make check` | ambiente, checksum, raccolta del collaudo e tracciabilità |
 | `make check-template` | verifica i 17 file protetti e i manifest |
 | `make check-collection` | raccoglie i test forniti senza eseguirli |
+| `make check-traceability` | controlla gli ID di ogni caso proprio e i 41 requisiti coperti |
 | `make test-unit SERVICE=user-service` | unit e contract test del singolo servizio, coverage ≥80% |
 | `make test-unit SERVICE=event-service` | unit e contract eventi con HTTP mockato, coverage ≥80% |
 | `make test-unit SERVICE=registration-service` | unit/contract iscrizioni, concorrenza e coverage ≥80% |
@@ -145,7 +151,7 @@ testati in processi separati per evitare collisioni negli import.
 - Bug d'implementazione: issue, branch `fix/<svc>-<issue#>`, regressione rossa,
   correzione in Vibe, verifiche verdi e commit con `closes #N`.
 - Bug di specifica: aggiornare requirements, design e tasks e passare dalla spec.
-- [BUGS.md](BUGS.md) contiene sei difetti reali corretti e verificati, con issue,
+- [BUGS.md](BUGS.md) contiene nove difetti reali corretti e verificati, con issue,
   requisiti, regressioni e commit. La chiusura delle issue segue l'integrazione
   delle correzioni su `main`.
 - `collaudo.txt` e tag `v1.0.0` appartengono alla consegna finale; non vengono
