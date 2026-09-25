@@ -127,7 +127,7 @@ def validate_user_create(data: Any) -> dict[str, Any]:
 
     if "role" in data:
         role = data["role"]
-        if role not in _VALID_ROLES:
+        if not isinstance(role, str) or role not in _VALID_ROLES:
             raise ValidationError(
                 f"Field 'role' must be one of {_VALID_ROLES}",
                 {"field": "role", "value": role},
@@ -266,7 +266,7 @@ def validate_user_update(data: Any) -> dict[str, Any]:
 
     if "role" in data:
         role = data["role"]
-        if role not in _VALID_ROLES:
+        if not isinstance(role, str) or role not in _VALID_ROLES:
             raise ValidationError(
                 f"Field 'role' must be one of {_VALID_ROLES}",
                 {"field": "role", "value": role},
