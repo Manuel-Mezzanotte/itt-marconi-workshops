@@ -51,7 +51,7 @@ Materiale protetto e altri servizi non vengono modificati.
   - _Requirements: REQ-REG-B01, REQ-REG-B02, REQ-REG-B04, REQ-REG-B05,
     REQ-REG-B06, REQ-REG-B07, REQ-REG-B09, REQ-REG-04, REQ-REG-05_
 
-- [ ] T-07 — Manifest, collaudo e documentazione
+- [x] T-07 — Manifest, collaudo e documentazione
   - Dichiarare registration nel manifest con cwd e comando coerenti.
   - Eseguire unit/coverage>=80%, integrazione propria e collaudo mandatory con
     tutti i backend, incluso IT-J01, dati isolati e processi terminati.

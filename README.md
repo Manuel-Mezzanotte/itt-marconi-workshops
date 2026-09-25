@@ -4,26 +4,29 @@ Progetto per l'esame pratico Spec-Driven Development con Kiro.
 Fork: [Manuel-Mezzanotte/itt-marconi-workshops](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops).
 Traccia: [Exam/Exam.MD](Exam/Exam.MD).
 
-## Stato: fase 3 completata — user-service ed event-service
+## Stato: fase 4 completata — tre servizi obbligatori
 
-User-service ed event-service espongono CRUD, filtri e paginazione. Event-service
-verifica l'organizzatore tramite HTTP e applica validazioni di date, prezzo,
-capienza e ciclo di vita. Le specifiche precedono il codice; i task sono
-completati con verifiche e commit distinti.
+User-service, event-service e registration-service sono implementati. Le iscrizioni
+verificano utenti/eventi via HTTP, acquisiscono il prezzo dall'evento e gestiscono
+duplicati, capienza, cancellazioni e statistiche. Le specifiche precedono il codice;
+i task sono completati con verifiche e commit distinti.
 
 | Servizio | Casi unitari/contratto superati | Coverage con rami |
 |---|---:|---:|
 | user-service | 597 | 98,46% |
 | event-service | 431 | 99,59% |
+| registration-service | 377 | 99,79% |
 
-Il collaudo del docente user+event passa **16/16 su ciascuno dei tre backend**,
-senza skipped. Passano inoltre **12 test propri con processi reali** per
-successo, riferimenti/ruoli invalidi, dipendenza spenta e persistenza ai riavvii.
-Report: [fase 2](docs/phase-2-verification.md) e [fase 3](docs/phase-3-verification.md).
+Il collaudo obbligatorio del docente passa **27/27 su ciascuno dei tre backend**,
+incluso il percorso completo IT-J01; zero skipped, dieci test bonus esclusi dalla
+selezione mandatory. Passano inoltre **33 test propri con processi reali**,
+inclusi concorrenza, ciascuna dipendenza spenta e persistenza ai riavvii.
+Report: [fase 2](docs/phase-2-verification.md), [fase 3](docs/phase-3-verification.md)
+e [fase 4](docs/phase-4-verification.md).
 
-`services.yaml` abilita user ed event. Registration-service resta alla fase 4:
-il collaudo dell'intera piattaforma non è ancora completato. Un test skipped
-non equivale a un test superato.
+`services.yaml` abilita i tre servizi obbligatori. Restano la revisione complessiva
+della fase 5 e la consegna della fase 6: collaudo.txt finale e tag v1.0.0 non sono
+ancora creati. I servizi bonus non sono implementati.
 
 ## Ambiente riproducibile
 
@@ -71,7 +74,7 @@ Non scrivere codice applicativo prima del commit di tasks.
 |---|---:|---|---|
 | user-service | 5001 | nessuna | completo e collaudato sui tre backend |
 | event-service | 5002 | user-service | completo e collaudato sui tre backend |
-| registration-service | 5003 | user-service, event-service | non implementato |
+| registration-service | 5003 | user-service, event-service | completo e collaudato sui tre backend |
 | feedback-service | 5004 | registration-service, event-service | bonus non avviato |
 | notification-service | 5005 | user-service, registration-service | bonus non avviato |
 
@@ -102,8 +105,16 @@ cd services/event-service
 PORT=5002 STORAGE_BACKEND=sqlite DATA_DIR=./data USER_SERVICE_URL=http://localhost:5001 ../../.venv/bin/python -m app
 ```
 
-Configurazione, API ed esempi: [user-service](services/user-service/README.md)
-ed [event-service](services/event-service/README.md).
+In un terzo terminale dalla root:
+
+```bash
+cd services/registration-service
+PORT=5003 STORAGE_BACKEND=sqlite DATA_DIR=./data USER_SERVICE_URL=http://localhost:5001 EVENT_SERVICE_URL=http://localhost:5002 ../../.venv/bin/python -m app
+```
+
+Configurazione, API ed esempi: [user-service](services/user-service/README.md),
+[event-service](services/event-service/README.md) e
+[registration-service](services/registration-service/README.md).
 
 ## Comandi di verifica e test
 
@@ -114,16 +125,17 @@ ed [event-service](services/event-service/README.md).
 | `make check-collection` | raccoglie i test forniti senza eseguirli |
 | `make test-unit SERVICE=user-service` | unit e contract test del singolo servizio, coverage ≥80% |
 | `make test-unit SERVICE=event-service` | unit e contract eventi con HTTP mockato, coverage ≥80% |
+| `make test-unit SERVICE=registration-service` | unit/contract iscrizioni, concorrenza e coverage ≥80% |
 | `make test-unit-all` | unit test dei tre servizi in processi separati |
 | `make test-own-integration` | test propri in `tests/service_integration/` |
 | `make acceptance` | collaudo dei servizi obbligatori |
 | `make test` | unit, integrazione propria, collaudo obbligatorio, in sequenza |
 
-Per il collaudo dei servizi completati:
-`.venv/bin/python -m pytest tests/integration/test_user.py tests/integration/test_event.py -v`.
-Il report della fase 3 contiene la ripetizione isolata sui tre backend.
-`make test-own-integration` esegue i test reali di event-service su tutti i backend.
-I comandi globali per i tre servizi richiedono anche la fase 4.
+Il collaudo obbligatorio è `.venv/bin/python -m pytest tests/integration -m mandatory -v`.
+Il report della fase 4 contiene la ripetizione isolata sui tre backend.
+`make test-own-integration` esegue già i casi event/registration su tutti i backend.
+I comandi globali sono utilizzabili; i package app dei tre servizi vengono
+testati in processi separati per evitare collisioni negli import.
 
 ## Git, bug e consegna
 
