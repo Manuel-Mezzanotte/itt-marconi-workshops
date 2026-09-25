@@ -3,3 +3,7 @@ services:
     cwd: services/user-service
     command: ../../.venv/bin/python -m app
     health_path: /health
+  event:
+    cwd: services/event-service
+    command: ../../.venv/bin/python -m app
+    health_path: /health

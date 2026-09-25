@@ -1,11 +1,22 @@
 # Integrazione propria
 
-Questa cartella ospiterà i test con servizi reali scritti durante le fasi event
-e registration. Il collaudo del docente rimane in `tests/integration/`.
+La suite avvia user-service ed event-service come processi reali con porte libere,
+DATA_DIR temporanee e backend parametrizzato memory/json/sqlite. Non usa import
+delle fixture del docente, né importa codice applicativo dei servizi nel runner.
 
-Usare fixture pytest con processi separati, porte libere, `DATA_DIR` temporanee
-e teardown garantito. Per ogni servizio con dipendenze: successo, riferimento
-inesistente (422), dipendenza spenta (503), con riferimenti ai requisiti.
+`test_event_http.py` contiene quattro scenari per ciascun backend, 12 casi:
 
-Nella fase 1 non sono presenti test applicativi. `make test-own-integration`
-sarà utilizzabile quando verranno implementati i relativi task.
+- CRUD completo e verifica reale dell'organizzatore.
+- Utente inesistente e ruolo errato: 422, nessuna creazione.
+- Arresto del processo user: POST/PUT/PATCH con riferimento producono 503 senza
+  mutare l'evento; health, letture e operazioni senza riferimento restano disponibili.
+- Riavvio event: JSON/SQLite recuperano la stessa risorsa, memory riparte vuoto.
+
+Ogni risposta è verificata tramite il validator del contratto. Il teardown termina
+i processi, controlla le porte e rimuove la directory temporanea. Le attese di
+startup e arresto sono limitate; eventuali problemi riportano il log del servizio.
+
+Dalla root: `make test-own-integration`.
+La suite del docente rimane separata in `tests/integration/`: eseguire i due
+gruppi in processi pytest distinti, come già previsto dal Makefile.
+Gli scenari di registration-service saranno aggiunti nella fase 4.

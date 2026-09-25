@@ -46,7 +46,7 @@ Non modificare contracts/, tests/integration/ o Exam/.
     errori uniformi e indipendenza delle letture dalla disponibilità di user.
   - _Requirements: REQ-EVT-02, REQ-EVT-03, REQ-EVT-04, REQ-EVT-06_
 
-- [ ] T-07 — Integrazione reale, collaudo e documentazione
+- [x] T-07 — Integrazione reale, collaudo e documentazione
   - Aggiungere fixture/processi e casi reali positivi, 422 e 503; riavvii persistenti.
   - Abilitare solo event oltre a user in services.yaml.
   - Eseguire unit/contract con coverage >=80%, integrazione propria e collaudo

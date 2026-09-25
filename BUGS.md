@@ -17,3 +17,11 @@ l'integrazione delle correzioni su main.
 Registrare soltanto difetti reali. Per il processo di gestione e la distinzione
 tra bug di implementazione e di specifica, vedere `.kiro/steering/structure.md`
 e `Exam/Exam.MD`, §6.5.
+
+## Verifiche della fase 3
+
+Non sono emersi nuovi difetti nelle verifiche eseguite su event-service:
+431 unit/contract, 12 integrazioni proprie e collaudo user+event 16/16 per
+backend. Non sono state aggiunte issue artificiali. Il modello di avvio introdotto
+con la correzione BUG-06 è stato adottato anche per event-service e verificato
+con resolver indisponibile e FLASK_DEBUG=1.
