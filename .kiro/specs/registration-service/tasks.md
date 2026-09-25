@@ -43,7 +43,7 @@ Materiale protetto e altri servizi non vengono modificati.
   - _Requirements: REQ-REG-03, REQ-REG-B04, REQ-REG-B05, REQ-REG-B06,
     REQ-REG-B07, REQ-REG-04, REQ-REG-05_
 
-- [ ] T-06 — Integrazione reale dei tre servizi
+- [x] T-06 — Integrazione reale dei tre servizi
   - Estendere fixture per avviare registration con user/event reali.
   - Test flusso completo, riferimenti inesistenti, user/event spenti separatamente,
     concorrenza HTTP, importo storico e persistenza dopo riavvio sui tre backend.

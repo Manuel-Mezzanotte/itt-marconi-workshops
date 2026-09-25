@@ -101,6 +101,15 @@ def event_platform(start_service):
 
 
 @pytest.fixture
+def registration_platform(event_platform, start_service):
+    user, event = event_platform
+    registration = start_service("registration-service", urls={
+        "USER_SERVICE_URL": user.url, "EVENT_SERVICE_URL": event.url,
+    })
+    return user, event, registration
+
+
+@pytest.fixture
 def http():
     def request(service, method, path, **kwargs):
         with requests.request(method, service.url + path, timeout=5, **kwargs) as response:
