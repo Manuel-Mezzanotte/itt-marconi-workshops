@@ -6,6 +6,23 @@ import pytest
 from app.config import load_config
 
 
+@pytest.fixture(autouse=True)
+def isolated_configuration_environment(monkeypatch):
+    for name in ("PORT", "STORAGE_BACKEND", "DATA_DIR"):
+        monkeypatch.delenv(name, raising=False)
+
+
+def test_environment_configuration_and_override_precedence(monkeypatch, tmp_path):
+    """REQ-USR-09: read environment at call time; explicit overrides take precedence."""
+    monkeypatch.setenv("PORT", "15501")
+    monkeypatch.setenv("STORAGE_BACKEND", "sqlite")
+    monkeypatch.setenv("DATA_DIR", str(tmp_path))
+    assert load_config() == {"PORT": 15501, "STORAGE_BACKEND": "sqlite", "DATA_DIR": tmp_path}
+    assert load_config({"PORT": 6001, "STORAGE_BACKEND": "memory"}) == {
+        "PORT": 6001, "STORAGE_BACKEND": "memory", "DATA_DIR": tmp_path,
+    }
+
+
 # ---------------------------------------------------------------------------
 # Default values
 # ---------------------------------------------------------------------------
