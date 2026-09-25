@@ -122,6 +122,12 @@ Non usare Run all tasks, Quick Spec, Design-First o Vibe per creare l'applicazio
 Nessun codice applicativo prima del commit di tasks. Date reali dei commit,
 nessuna ricostruzione o retrodatazione della cronologia.
 
+Il task attivo delimita anche i metodi del service e le route: non anticipare
+operazioni assegnate ai task successivi. Eseguire il lavoro direttamente nella
+sessione Spec aperta da Start task, senza delegare a subagenti, per mantenere
+un'unica revisione e limitare letture duplicate. Ogni bug riprodotto va segnalato:
+fermarsi prima della correzione, che seguirà il workflow dedicato sotto.
+
 ## Branch e bug
 
 Preparazione su `chore/phase-1-setup`, da integrare in `main` dopo le verifiche.
