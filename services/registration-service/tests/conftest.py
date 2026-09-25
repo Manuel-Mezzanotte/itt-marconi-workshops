@@ -50,9 +50,18 @@ def references(event):
     def event_response(request):
         return 200, {}, json.dumps({**event, "id": request.url.rsplit("/", 1)[1]})
 
-    with responses.RequestsMock() as mock:
+    with responses.RequestsMock(assert_all_requests_are_fired=False) as mock:
         mock.add_callback("GET", re.compile(r"http://users.test:9001/api/v1/users/[0-9a-f-]+$"),
                           callback=user_response, content_type="application/json")
         mock.add_callback("GET", re.compile(r"http://events.test:9002/api/v1/events/[0-9a-f-]+$"),
                           callback=event_response, content_type="application/json")
         yield mock
+
+
+@pytest.fixture
+def create_registration(api, payload, references):
+    def create(**overrides):
+        response = api.post("/api/v1/registrations", json={**payload, **overrides})
+        assert response.status_code == 201, response.get_json()
+        return response.get_json()
+    return create

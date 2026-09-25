@@ -30,3 +30,24 @@ def validate_patch(data):
     if not isinstance(status, str) or status not in {"confirmed", "cancelled"}:
         invalid("Invalid registration status", field="status")
     return status
+
+
+def validate_query(page=None, page_size=None, user_id=None, event_id=None, status=None):
+    numbers = []
+    for name, raw, default in (("page", page, 1), ("page_size", page_size, 20)):
+        try:
+            value = default if raw is None else int(raw)
+        except (ValueError, TypeError):
+            invalid("Pagination must use integers", field=name)
+        if value < 1 or (name == "page_size" and value > 100):
+            invalid("Pagination outside allowed range", field=name)
+        numbers.append(value)
+    filters = {}
+    for field, value in (("user_id", user_id), ("event_id", event_id)):
+        if value is not None:
+            filters[field] = validate_uuid(value, field)
+    if status is not None:
+        if status not in {"confirmed", "cancelled"}:
+            invalid("Invalid status filter", field="status")
+        filters["status"] = status
+    return numbers[0], numbers[1], filters

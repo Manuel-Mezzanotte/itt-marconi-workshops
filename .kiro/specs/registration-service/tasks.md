@@ -29,7 +29,7 @@ Materiale protetto e altri servizi non vengono modificati.
   - _Requirements: REQ-REG-01, REQ-REG-B01, REQ-REG-B02, REQ-REG-B03,
     REQ-REG-B04, REQ-REG-B05, REQ-REG-B06, REQ-REG-B09, REQ-REG-05_
 
-- [ ] T-04 — Letture, filtri e statistiche
+- [x] T-04 — Letture, filtri e statistiche
   - GET singolo/lista, query validate, filtri AND e paginazione.
   - Stats con capienza da event, conteggio confirmed e 404 speciale.
   - Test backend/contratti: totali, UUID invalidi, pagina enorme, stats 422/404/503,
