@@ -24,6 +24,13 @@
         "chatSessionId": "sess_85eb0e02-3add-4101-aea5-fb3ac4144337",
         "timestamp": 1790350462203
       }
+    ],
+    "3. Validazione e creazione utenti [T-03]": [
+      {
+        "executionId": "c972c991-5cb4-4410-9bd7-3dbb08b0fb08",
+        "chatSessionId": "sess_01eb9fc4-a54d-4a39-8247-ae2b3b2375b9",
+        "timestamp": 1790351260868
+      }
     ]
   }
 }

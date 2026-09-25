@@ -14,6 +14,9 @@ from flask import Blueprint, Flask, jsonify
 
 from app.config import load_config
 from app.errors import register_error_handlers
+from app.repositories import get_repository
+from app.routes import create_routes_blueprint
+from app.service import UserService
 
 
 def create_app(config: dict[str, Any] | None = None) -> Flask:
@@ -24,7 +27,7 @@ def create_app(config: dict[str, Any] | None = None) -> Flask:
     config:
         Optional dict of configuration overrides passed to load_config().
         Each call to create_app() produces an independent application with
-        its own configuration, repositories (future tasks) and service.
+        its own configuration, repositories and service.
 
     Returns
     -------
@@ -35,10 +38,10 @@ def create_app(config: dict[str, Any] | None = None) -> Flask:
     app = Flask(__name__)
     app.config["USER_SERVICE_CONFIG"] = cfg
 
-    # Register error handlers at application level (not just blueprint).
+    # Register error handlers at application level.
     register_error_handlers(app)
 
-    # Health blueprint — the only routes available in T-01.
+    # Health blueprint
     health_bp = Blueprint("health", __name__)
 
     @health_bp.route("/health", methods=["GET"])
@@ -47,5 +50,13 @@ def create_app(config: dict[str, Any] | None = None) -> Flask:
         return jsonify({"status": "ok", "service": "user-service"}), 200
 
     app.register_blueprint(health_bp)
+
+    # Initialize repository and service
+    repository = get_repository(cfg["STORAGE_BACKEND"], cfg["DATA_DIR"])
+    service = UserService(repository)
+
+    # Register routes blueprint
+    routes_bp = create_routes_blueprint(service)
+    app.register_blueprint(routes_bp)
 
     return app
