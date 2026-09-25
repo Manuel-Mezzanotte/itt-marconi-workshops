@@ -14,7 +14,7 @@ il task successivo. Non modificare contratti, collaudo o la copia sotto Exam/.
 
 ## Tasks
 
-- [ ] 1. Avvio, configurazione e health [T-01]
+- [x] 1. Avvio, configurazione e health [T-01]
   - Crea app/config.py, app/errors.py, app/__init__.py e app/__main__.py secondo il design. La factory di questo task registra solo configurazione, health e handler: repository e service saranno collegati nel T-03, senza placeholder o import di file inesistenti.
   - Configurazione letta nella factory, default e override verificati; PORT valido, backend noto, DATA_DIR come Path. L'entrypoint usa PORT senza debug o reloader.
   - Aggiungi fixture e test per configurazione, app indipendenti, health conforme al contratto, 404 e 405 in JSON. Per testare __main__ intercetta app.run: non lasciare server avviati.

@@ -1,0 +1,17 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Avvio, configurazione e health [T-01]": [
+      {
+        "executionId": "dcf18059-3ef7-4568-9f82-5104bc57b936",
+        "chatSessionId": "sess_874e3e3e-7099-429a-a3fe-a4e4fb6c6d0c",
+        "timestamp": 1790347245558
+      },
+      {
+        "executionId": "dcf18059-3ef7-4568-9f82-5104bc57b936",
+        "chatSessionId": "sess_874e3e3e-7099-429a-a3fe-a4e4fb6c6d0c",
+        "timestamp": 1790350092429
+      }
+    ]
+  }
+}
