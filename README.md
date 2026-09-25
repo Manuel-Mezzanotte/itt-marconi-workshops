@@ -4,20 +4,26 @@ Progetto per l'esame pratico Spec-Driven Development con Kiro.
 Fork: [Manuel-Mezzanotte/itt-marconi-workshops](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops).
 Traccia: [Exam/Exam.MD](Exam/Exam.MD).
 
-## Stato: fase 2 completata — user-service
+## Stato: fase 3 completata — user-service ed event-service
 
-User-service espone CRUD completo, filtri per ruolo/email e paginazione.
-Le specifiche sono state committate nell'ordine requirements, design e tasks;
-tutti gli otto task sono completati, con test e commit distinti.
+User-service ed event-service espongono CRUD, filtri e paginazione. Event-service
+verifica l'organizzatore tramite HTTP e applica validazioni di date, prezzo,
+capienza e ciclo di vita. Le specifiche precedono il codice; i task sono
+completati con verifiche e commit distinti.
 
-Verifica finale del servizio: **597 casi unitari e di contratto superati**,
-coverage **98,46% includendo i rami**. Gli otto test del docente IT-U01..IT-U08
-passano su ciascun backend: memory, JSON e SQLite, senza skipped.
-Vedere il [report della fase 2](docs/phase-2-verification.md).
+| Servizio | Casi unitari/contratto superati | Coverage con rami |
+|---|---:|---:|
+| user-service | 597 | 98,46% |
+| event-service | 431 | 99,59% |
 
-`services.yaml` abilita soltanto user-service. Event-service e
-registration-service restano alle fasi 3 e 4: il collaudo dell'intera piattaforma
-non è ancora completato. Un test skipped non equivale a un test superato.
+Il collaudo del docente user+event passa **16/16 su ciascuno dei tre backend**,
+senza skipped. Passano inoltre **12 test propri con processi reali** per
+successo, riferimenti/ruoli invalidi, dipendenza spenta e persistenza ai riavvii.
+Report: [fase 2](docs/phase-2-verification.md) e [fase 3](docs/phase-3-verification.md).
+
+`services.yaml` abilita user ed event. Registration-service resta alla fase 4:
+il collaudo dell'intera piattaforma non è ancora completato. Un test skipped
+non equivale a un test superato.
 
 ## Ambiente riproducibile
 
@@ -64,7 +70,7 @@ Non scrivere codice applicativo prima del commit di tasks.
 | Servizio | Porta di sviluppo | Dipendenze HTTP | Stato |
 |---|---:|---|---|
 | user-service | 5001 | nessuna | completo e collaudato sui tre backend |
-| event-service | 5002 | user-service | non implementato |
+| event-service | 5002 | user-service | completo e collaudato sui tre backend |
 | registration-service | 5003 | user-service, event-service | non implementato |
 | feedback-service | 5004 | registration-service, event-service | bonus non avviato |
 | notification-service | 5005 | user-service, registration-service | bonus non avviato |
@@ -82,14 +88,22 @@ Il collaudo inietta porte 15001–15005 e URL coerenti; le istanze di resilienza
 usano 15101+. Ogni processo deve rispettare l'ambiente ricevuto.
 
 Il comando di avvio è `../../.venv/bin/python -m app`, dalla directory
-`services/<servizio>`. Al momento è avviabile soltanto user-service:
+`services/<servizio>`. Per avviare gli utenti:
 
 ```bash
 cd services/user-service
 PORT=5001 STORAGE_BACKEND=sqlite DATA_DIR=./data ../../.venv/bin/python -m app
 ```
 
-Configurazione, API ed esempi sono nel [README del servizio](services/user-service/README.md).
+In un secondo terminale dalla root:
+
+```bash
+cd services/event-service
+PORT=5002 STORAGE_BACKEND=sqlite DATA_DIR=./data USER_SERVICE_URL=http://localhost:5001 ../../.venv/bin/python -m app
+```
+
+Configurazione, API ed esempi: [user-service](services/user-service/README.md)
+ed [event-service](services/event-service/README.md).
 
 ## Comandi di verifica e test
 
@@ -99,15 +113,17 @@ Configurazione, API ed esempi sono nel [README del servizio](services/user-servi
 | `make check-template` | verifica i 17 file protetti e i manifest |
 | `make check-collection` | raccoglie i test forniti senza eseguirli |
 | `make test-unit SERVICE=user-service` | unit e contract test del singolo servizio, coverage ≥80% |
+| `make test-unit SERVICE=event-service` | unit e contract eventi con HTTP mockato, coverage ≥80% |
 | `make test-unit-all` | unit test dei tre servizi in processi separati |
 | `make test-own-integration` | test propri in `tests/service_integration/` |
 | `make acceptance` | collaudo dei servizi obbligatori |
 | `make test` | unit, integrazione propria, collaudo obbligatorio, in sequenza |
 
-Per il collaudo del solo servizio utenti:
-`.venv/bin/python -m pytest tests/integration/test_user.py -v`.
-Il report della fase 2 contiene la ripetizione isolata sui tre backend.
-I comandi per tutti i servizi e l'integrazione tra servizi richiedono le fasi successive.
+Per il collaudo dei servizi completati:
+`.venv/bin/python -m pytest tests/integration/test_user.py tests/integration/test_event.py -v`.
+Il report della fase 3 contiene la ripetizione isolata sui tre backend.
+`make test-own-integration` esegue i test reali di event-service su tutti i backend.
+I comandi globali per i tre servizi richiedono anche la fase 4.
 
 ## Git, bug e consegna
 
