@@ -28,4 +28,9 @@ def create_routes(service):
     def patch_event(event_id):
         return jsonify(service.patch(event_id, request.get_json(silent=False)))
 
+    @routes.delete("/<event_id>")
+    def delete_event(event_id):
+        service.delete(event_id)
+        return "", 204
+
     return routes

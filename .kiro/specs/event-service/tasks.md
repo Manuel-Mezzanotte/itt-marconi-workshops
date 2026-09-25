@@ -40,7 +40,7 @@ Non modificare contracts/, tests/integration/ o Exam/.
   - _Requirements: REQ-EVT-03, REQ-EVT-B01, REQ-EVT-B02, REQ-EVT-B03,
     REQ-EVT-B04, REQ-EVT-B05, REQ-EVT-04, REQ-EVT-06_
 
-- [ ] T-06 — DELETE e contratti completi
+- [x] T-06 — DELETE e contratti completi
   - Aggiungere DELETE 204 vuoto/404 e completare i test delle sette operazioni API.
   - Verificare cancellazione isolata, lettura successiva 404, totale aggiornato,
     errori uniformi e indipendenza delle letture dalla disponibilità di user.

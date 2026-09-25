@@ -63,3 +63,7 @@ class EventService:
         if updated is None:
             raise ApiError(404, "NOT_FOUND", "Event does not exist")
         return updated
+
+    def delete(self, event_id):
+        if not self.repository.delete(event_id):
+            raise ApiError(404, "NOT_FOUND", "Event does not exist")
