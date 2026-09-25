@@ -71,6 +71,20 @@ class UserService:
             raise UserNotFound(user_id)
         return user
 
+    def replace_user(self, user_id: str, data: dict[str, Any]) -> dict[str, Any]:
+        current = self.get_user(user_id)
+        validated = validate_user_create(data)
+        replacement = {
+            **validated,
+            "id": current["id"],
+            "created_at": current["created_at"],
+            "updated_at": _format_timestamp(datetime.now(timezone.utc)),
+        }
+        updated = self._repo.update(user_id, replacement)
+        if updated is None:
+            raise UserNotFound(user_id)
+        return updated
+
     def list_users(
         self,
         role: str | None = None,

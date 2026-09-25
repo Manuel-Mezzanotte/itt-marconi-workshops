@@ -46,7 +46,7 @@ il task successivo. Non modificare contratti, collaudo o la copia sotto Exam/.
   - _Requirements: 4.1, 4.2, 5.1, 5.2, 5.3, 5.4, 6.1, 6.2, 6.3, 6.4, 3.3, 15.1, 15.2, 15.5_
   - _Traceability: REQ-USR-02, REQ-USR-03, REQ-USR-B03, REQ-USR-B02, REQ-USR-12_
 
-- [ ] 5. Sostituzione completa con PUT [T-05]
+- [x] 5. Sostituzione completa con PUT [T-05]
   - Implementa UserService.replace_user e PUT /api/v1/users/{id} usando UserCreate. Preserva id/created_at, aggiorna updated_at e ripristina i default dei campi opzionali omessi.
   - Test sui tre backend: sostituzione e default, normalizzazione email, propria email consentita, email di altro utente ->409 senza mutazioni, utente inesistente ->404, campi obbligatori mancanti e tipi errati ->422, JSON malformato ->400.
   - Issue #1: tutti e tre i campi read-only nel body ->422 con record invariato. Validator sul successo e su 404/409/422; 400 PUT verificato direttamente, come spiegato nel design.
