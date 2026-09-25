@@ -67,7 +67,7 @@ il task successivo. Non modificare contratti, collaudo o la copia sotto Exam/.
   - _Requirements: 9.1, 9.2, 11.1, 11.2, 15.1, 15.2, 15.5_
   - _Traceability: REQ-USR-06, REQ-USR-08, REQ-USR-12_
 
-- [ ] 8. Abilitazione, collaudo e documentazione [T-08]
+- [x] 8. Abilitazione, collaudo e documentazione [T-08]
   - Abilita soltanto la chiave user in services.yaml, con cwd services/user-service e comando ../../.venv/bin/python -m app. Nessun event/registration/bonus.
   - Esegui make test-unit SERVICE=user-service e verifica coverage almeno 80%, linee e rami. Aggiungi soltanto eventuali test mancanti coerenti con i requisiti.
   - Esegui .venv/bin/python -m pytest tests/integration/test_user.py -v con memory, json e sqlite; DATA_DIR temporanea diversa per ogni esecuzione. Conserva risultati reali, verifica i checksum e assicurati che i processi siano terminati.
