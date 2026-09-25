@@ -7,9 +7,12 @@ REQ-USR-12 — contract validation via assert_matches_contract
 """
 from __future__ import annotations
 
+from unittest.mock import Mock, patch
+
 import pytest
 
 from app import create_app
+from app.repositories import UserRepository
 from validator import assert_matches_contract
 
 
@@ -121,3 +124,21 @@ def test_method_not_allowed_error_format(client):
     assert "error" in data
     assert "code" in data["error"]
     assert "message" in data["error"]
+
+
+@pytest.mark.req("REQ-USR-08")
+def test_internal_storage_error_returns_uniform_json_without_details():
+    """Platform Standards §4: an unexpected storage failure must remain a JSON error (issue #8)."""
+    repository = Mock(spec=UserRepository)
+    repository.create.side_effect = OSError("private disk path and diagnostic")
+    with patch("app.get_repository", return_value=repository):
+        application = create_app({"STORAGE_BACKEND": "memory"})
+    response = application.test_client().post("/api/v1/users", json={
+        "first_name": "Ada", "last_name": "Lovelace", "email": "ada@example.com",
+    })
+    assert response.status_code == 500
+    assert response.mimetype == "application/json"
+    assert response.get_json() == {
+        "error": {"code": "INTERNAL_ERROR", "message": "Internal server error", "details": {}},
+    }
+    assert "private disk" not in response.get_data(as_text=True)
