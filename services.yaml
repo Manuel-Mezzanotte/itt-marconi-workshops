@@ -1,0 +1,22 @@
+# Manifest attivo: Fase 1, nessun servizio ancora implementato.
+# Dichiarare un servizio soltanto quando il suo entrypoint e /health funzionano.
+# Le chiavi canoniche del collaudo sono user, event, registration.
+services: {}
+
+# Configurazione prevista; abilitare progressivamente nelle rispettive fasi.
+# services:
+#   user:
+#     cwd: services/user-service
+#     command: ../../.venv/bin/python -m app
+#     health_path: /health
+#   event:
+#     cwd: services/event-service
+#     command: ../../.venv/bin/python -m app
+#     health_path: /health
+#   registration:
+#     cwd: services/registration-service
+#     command: ../../.venv/bin/python -m app
+#     health_path: /health
+
+# Il collaudo imposta PORT e *_SERVICE_URL: l'app deve leggerle dall'ambiente.
+# I test skipped con services: {} non dimostrano il funzionamento dei servizi.

@@ -30,3 +30,10 @@ env/
 
 # Local service manifest (copy of services.example.yaml)
 # services.yaml is committed by the candidate; kept out of ignore intentionally.
+
+# Local configuration and verification output (never credentials in Git)
+.env
+.env.*
+!.env.example
+.checks/
+.kiro/.cache/

@@ -1,0 +1,24 @@
+[tool.pytest.ini_options]
+testpaths = ["tests/integration", "tests/service_integration"]
+pythonpath = ["contracts", "tests/integration"]
+addopts = "-ra --strict-markers"
+markers = [
+  "req(id): collegamento a un requisito della specifica",
+  "mandatory: collaudo dei tre servizi obbligatori",
+  "optional: collaudo dei servizi facoltativi",
+  "user: user-service",
+  "event: event-service",
+  "registration: registration-service",
+  "feedback: feedback-service",
+  "notification: notification-service",
+  "e2e: percorso completo",
+  "resilience: dipendenza non disponibile",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["app"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true

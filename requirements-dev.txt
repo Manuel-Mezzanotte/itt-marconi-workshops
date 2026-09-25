@@ -1,0 +1,4 @@
+-r requirements.txt
+-r tests/integration/requirements.txt
+pytest-cov>=5,<8
+responses>=0.25,<1
