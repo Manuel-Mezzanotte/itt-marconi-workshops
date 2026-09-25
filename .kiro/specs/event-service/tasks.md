@@ -11,7 +11,7 @@ Non modificare contracts/, tests/integration/ o Exam/.
   - Test di configurazione/ambiente, errori 404/405, contratto health e avvio con PORT.
   - _Requirements: REQ-EVT-04, REQ-EVT-05, REQ-EVT-06_
 
-- [ ] T-02 — Repository memory, JSON e SQLite
+- [x] T-02 — Repository memory, JSON e SQLite
   - Implementare interfaccia, selezione backend, CRUD con copie, filtri/paginazione
     e update atomico tramite transform.
   - Test sui tre backend: persistenza, isolamento, rollback, replace JSON fallito,
