@@ -1,4 +1,7 @@
 import pytest
+import json
+import re
+import responses
 
 from app import create_app
 from validator import assert_matches_contract
@@ -24,3 +27,32 @@ def contract():
         })
         return body
     return check
+
+
+@pytest.fixture
+def payload():
+    return {
+        "user_id": "00000000-0000-4000-8000-00000000000a",
+        "event_id": "00000000-0000-4000-8000-00000000000b",
+    }
+
+
+@pytest.fixture
+def event(payload):
+    return {"id": payload["event_id"], "status": "published", "capacity": 2, "price": 149.0}
+
+
+@pytest.fixture
+def references(event):
+    def user_response(request):
+        return 200, {}, json.dumps({"id": request.url.rsplit("/", 1)[1], "role": "attendee"})
+
+    def event_response(request):
+        return 200, {}, json.dumps({**event, "id": request.url.rsplit("/", 1)[1]})
+
+    with responses.RequestsMock() as mock:
+        mock.add_callback("GET", re.compile(r"http://users.test:9001/api/v1/users/[0-9a-f-]+$"),
+                          callback=user_response, content_type="application/json")
+        mock.add_callback("GET", re.compile(r"http://events.test:9002/api/v1/events/[0-9a-f-]+$"),
+                          callback=event_response, content_type="application/json")
+        yield mock

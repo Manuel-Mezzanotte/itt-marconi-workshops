@@ -20,7 +20,7 @@ Materiale protetto e altri servizi non vengono modificati.
   - _Requirements: REQ-REG-B04, REQ-REG-B05, REQ-REG-B07, REQ-REG-02,
     REQ-REG-03, REQ-REG-04, REQ-REG-05_
 
-- [ ] T-03 — Validazione, dipendenze HTTP e creazione
+- [x] T-03 — Validazione, dipendenze HTTP e creazione
   - Payload create/patch, UUID e client user/event con timeout/mapping errori.
   - POST: verifica riferimenti, evento published, importo dal servizio eventi,
     UUID/timestamp e reserve atomica.
