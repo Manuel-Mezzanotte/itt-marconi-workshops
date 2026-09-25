@@ -12,7 +12,12 @@ from typing import Any
 
 from app.errors import UserNotFound
 from app.repositories import UserRepository
-from app.validation import validate_pagination, validate_role_filter, validate_user_create
+from app.validation import (
+    validate_pagination,
+    validate_role_filter,
+    validate_user_create,
+    validate_user_update,
+)
 
 
 class UserService:
@@ -78,6 +83,21 @@ class UserService:
             **validated,
             "id": current["id"],
             "created_at": current["created_at"],
+            "updated_at": _format_timestamp(datetime.now(timezone.utc)),
+        }
+        updated = self._repo.update(user_id, replacement)
+        if updated is None:
+            raise UserNotFound(user_id)
+        return updated
+
+    def update_user(self, user_id: str, data: dict[str, Any]) -> dict[str, Any]:
+        current = self.get_user(user_id)
+        changes = validate_user_update(data)
+        if not changes:
+            return current
+        replacement = {
+            **current,
+            **changes,
             "updated_at": _format_timestamp(datetime.now(timezone.utc)),
         }
         updated = self._repo.update(user_id, replacement)

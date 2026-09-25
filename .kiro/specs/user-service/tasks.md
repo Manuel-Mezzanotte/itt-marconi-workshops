@@ -53,7 +53,7 @@ il task successivo. Non modificare contratti, collaudo o la copia sotto Exam/.
   - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7, 2.2, 2.4, 3.2, 13.3, 13.4, 14.1, 14.2, 14.3, 14.9, 15.1, 15.2, 15.5_
   - _Traceability: REQ-USR-04, REQ-USR-B01, REQ-USR-B02, REQ-USR-10, REQ-USR-11, REQ-USR-12_
 
-- [ ] 6. Aggiornamento parziale con PATCH [T-06]
+- [x] 6. Aggiornamento parziale con PATCH [T-06]
   - Implementa UserService.update_user e PATCH /api/v1/users/{id} usando UserUpdate. Aggiorna solo i campi inviati; {} restituisce la risorsa invariata, incluso updated_at.
   - Test sui tre backend: campo singolo, company null, preservazione degli altri valori, timestamp, propria email, normalizzazione, duplicato ->409 senza mutazioni, id inesistente ->404, campi extra/tipi errati ->422 e JSON malformato ->400.
   - Issue #1: parametrizza id/created_at/updated_at e verifica 422 con record invariato. Validator sul successo e su 404/409/422; 400 PATCH verificato direttamente.
