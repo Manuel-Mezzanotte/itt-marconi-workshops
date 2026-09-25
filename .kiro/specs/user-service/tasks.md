@@ -30,7 +30,7 @@ il task successivo. Non modificare contratti, collaudo o la copia sotto Exam/.
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 5.2, 6.1, 6.3, 6.4, 12.2, 12.3, 12.4, 12.5, 12.7, 12.8, 15.3, 15.5_
   - _Traceability: REQ-USR-B01, REQ-USR-03, REQ-USR-B03, REQ-USR-09, REQ-USR-12_
 
-- [ ] 3. Validazione e creazione utenti [T-03]
+- [x] 3. Validazione e creazione utenti [T-03]
   - Implementa validation.py, UserService.create_user e la route POST esattamente su /api/v1/users, senza redirect dovuto a slash finale. Collega repository, service e blueprint nella factory; ogni app ha istanze proprie.
   - Applica i vincoli di UserCreate/UserUpdate, rifiuta campi extra/read-only, tipi sbagliati e JSON non oggetto. Non modificare il dict del chiamante. Email con fullmatch e successiva normalizzazione; id UUID v4 e timestamp UTC con Z creati dal service; default role e company.
   - Parsing silent=False: JSON malformato ->400; JSON null/array/scalare valido ->422. POST riuscito ->201 con Location; duplicato ->409. Gli errori delle scritture rimangono atomici.

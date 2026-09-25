@@ -51,6 +51,9 @@ devono distinguere i servizi anche quando viene fornita una directory comune.
   supportato dal validator, senza cambiare `contracts/validator.py`.
 - I test intermedi usano soltanto le API già implementate. Verificare codici
   e dati richiesti dal contratto, evitando vincoli arbitrari sul testo dei messaggi.
+- Usare pytest con output conciso e codice di uscita diretto, senza pipe a head
+  o tail. Dopo una suite verde, ripeterla soltanto se cambiano file o restano
+  problemi concreti da verificare; altrimenti concludere il task.
 - Coverage almeno 80% per servizio; `make test-unit SERVICE=user-service` misura
   soltanto l'app di quel servizio. La configurazione include anche i rami.
 - Test di integrazione propri con processi reali, porte libere, directory temporanee

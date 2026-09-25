@@ -4,12 +4,13 @@ Progetto per l'esame pratico Spec-Driven Development con Kiro.
 Fork: [Manuel-Mezzanotte/itt-marconi-workshops](https://github.com/Manuel-Mezzanotte/itt-marconi-workshops).
 Traccia: [Exam/Exam.MD](Exam/Exam.MD).
 
-## Stato: fase 2, user-service fino al T-02
+## Stato: fase 2, user-service fino al T-03
 
 Le specifiche di user-service sono state committate nell'ordine requirements,
-design e tasks. T-01 e T-02 sono stati eseguiti con Start task in Kiro:
-configurazione, `/health`, errori e repository memory/JSON/SQLite con test propri.
-Le API utenti e il collegamento dei repository alla factory iniziano nel T-03.
+design e tasks. T-01, T-02 e T-03 sono stati eseguiti con Start task in Kiro:
+configurazione, `/health`, errori, repository memory/JSON/SQLite e creazione utenti.
+`POST /api/v1/users` è collegato al service e ai repository; GET, PUT, PATCH e
+DELETE appartengono ai task successivi. I difetti trovati sono registrati in BUGS.md.
 Gli altri servizi non sono ancora implementati; il collaudo funzionale è pendente.
 
 `services.yaml` contiene ancora `services: {}`: user-service verrà abilitato
@@ -60,7 +61,7 @@ Non scrivere codice applicativo prima del commit di tasks.
 
 | Servizio | Porta di sviluppo | Dipendenze HTTP | Stato |
 |---|---:|---|---|
-| user-service | 5001 | nessuna | T-01 e T-02; API utenti da implementare |
+| user-service | 5001 | nessuna | T-01..T-03; POST utenti e health |
 | event-service | 5002 | user-service | non implementato |
 | registration-service | 5003 | user-service, event-service | non implementato |
 | feedback-service | 5004 | registration-service, event-service | bonus non avviato |
@@ -79,7 +80,7 @@ Il collaudo inietta porte 15001–15005 e URL coerenti; le istanze di resilienza
 usano 15101+. Ogni processo deve rispettare l'ambiente ricevuto.
 
 Il comando di avvio è `../../.venv/bin/python -m app`, dalla directory
-`services/<servizio>`. Solo user-service dispone dell'entrypoint e di `/health`;
+`services/<servizio>`. User-service dispone dell'entrypoint, di `/health` e del POST utenti;
 le altre directory `app/` sono ancora vuote. La configurazione futura del collaudo
 è riportata come commento in `services.yaml`.
 
