@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from app.errors import ApiError
 from app.repositories import RegistrationRepository
-from app.validation import validate_create, validate_query, validate_uuid
+from app.validation import validate_create, validate_patch, validate_query, validate_uuid
 
 
 def timestamp():
@@ -47,3 +47,14 @@ class RegistrationService:
             "event_id": event_id, "capacity": event["capacity"],
             "confirmed": confirmed, "available": max(0, event["capacity"] - confirmed),
         }
+
+    def patch(self, registration_id, data):
+        status = validate_patch(data)
+        updated = self.repository.update_status(registration_id, status, timestamp())
+        if updated is None:
+            raise ApiError(404, "NOT_FOUND", "Registration does not exist")
+        return updated
+
+    def delete(self, registration_id):
+        if not self.repository.delete(registration_id):
+            raise ApiError(404, "NOT_FOUND", "Registration does not exist")

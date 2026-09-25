@@ -26,4 +26,13 @@ def create_routes(service):
     def get_registration(registration_id):
         return jsonify(service.get(registration_id))
 
+    @routes.patch("/<registration_id>")
+    def patch_registration(registration_id):
+        return jsonify(service.patch(registration_id, request.get_json(silent=False)))
+
+    @routes.delete("/<registration_id>")
+    def delete_registration(registration_id):
+        service.delete(registration_id)
+        return "", 204
+
     return routes

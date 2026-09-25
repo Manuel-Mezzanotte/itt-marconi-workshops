@@ -36,7 +36,7 @@ Materiale protetto e altri servizi non vengono modificati.
     disponibilità dopo riduzione capienza, assenza di chiamate HTTP nelle letture locali.
   - _Requirements: REQ-REG-02, REQ-REG-B08, REQ-REG-B09, REQ-REG-05_
 
-- [ ] T-05 — Cancellazioni, DELETE e contratto completo
+- [x] T-05 — Cancellazioni, DELETE e contratto completo
   - PATCH status, idempotenza, transizione vietata; DELETE e PUT 405.
   - Test importo storico, posto liberato, riiscrizione con nuovo id, campi
     riservati, errori senza mutazioni e otto operazioni del contratto.
